@@ -1,0 +1,4 @@
+plugins:
+  discourse_faucet:
+    default: true
+    client: true
