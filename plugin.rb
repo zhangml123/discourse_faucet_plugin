@@ -5,7 +5,6 @@
 # url: https://github.com/zhangml123/discourse_faucet_plugin
 
 puts "faucet plugin"
-register_asset "javascripts/discourse/controllers/faucet.js"
-register_asset "javascripts/discourse/faucet-route-map.js"
+
 load File.expand_path('../lib/engine.rb', __FILE__)
 
