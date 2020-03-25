@@ -9,8 +9,12 @@
 		</div>
 		<div>
 			
-			<input placeholder="输入您的钱包地址" p/>
-			<button>申领LAT</button>
+			<input placeholder="输入您的钱包地址" onchange={{action "onInputChange"}}/>
+			{{#if receiveDisabled}}
+			<button  disabled >申领LAT</button>
+			{{else}}
+			<button >申领LAT</button>
+			{{/if}}
 		</div>
 		<div>
 			<ul>
@@ -18,16 +22,21 @@
 				<li>
 					<img/>
 					<p>水龙头地址余额</p>
+					
+					{{#if model.balance}}
+						<p>{{model.balance}}</p>
+					{{else}}
+						<p>NOT FOUND</p>
+					{{/if}}
+				</li>
+				<li>
+					<img/>
+					<p>今日可领金额</p>
 					<p></p>
 				</li>
 				<li>
 					<img/>
-					<p>水龙头地址余额</p>
-					<p></p>
-				</li>
-				<li>
-					<img/>
-					<p>水龙头地址余额</p>
+					<p>服务运行状态</p>
 					<p></p>
 				</li>
 			</ul>
