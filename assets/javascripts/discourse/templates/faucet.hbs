@@ -9,12 +9,11 @@
 		</div>
 		<div>
 			
-			<input placeholder="输入您的钱包地址" onchange={{action "onInputChange"}}/>
-			{{#if receiveDisabled}}
-			<button  disabled >申领LAT</button>
-			{{else}}
-			<button >申领LAT</button>
-			{{/if}}
+			
+
+			{{input placeholder="输入您的钱包地址"  value=address name="address" }}
+                    
+			{{d-button  class="btn-large btn-primary"  disabled=receiveDisabled   action=(action "claim")   }}
 		</div>
 		<div>
 			<ul>

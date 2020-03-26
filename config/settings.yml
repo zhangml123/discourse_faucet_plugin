@@ -1,4 +1,10 @@
 plugins:
-  discourse_faucet:
+  faucet_enabled:
     default: true
+    client: true
+  faucet_user_limit:
+    default: "200"
+    client: true
+  faucet_daily_limit:
+    default: "2000000"
     client: true

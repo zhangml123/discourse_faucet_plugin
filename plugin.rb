@@ -5,10 +5,10 @@
 # url: https://github.com/zhangml123/discourse_faucet_plugin
 
 puts "faucet plugin111111"
-
+enabled_site_setting :faucet_enabled
 after_initialize do
 
-  [ "../app/models/faucet",
+  [ "../app/models/faucet_history",
   ].each { |path| require File.expand_path(path, __FILE__) }
 end
 

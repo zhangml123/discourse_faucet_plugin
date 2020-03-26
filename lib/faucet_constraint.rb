@@ -1,5 +1,5 @@
 class FaucetConstraint
   def matches?(request)
-    SiteSetting.discourse_faucet
+    SiteSetting.faucet_enabled
   end
 end
