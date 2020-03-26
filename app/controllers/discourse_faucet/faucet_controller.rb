@@ -33,22 +33,26 @@ module DiscourseFaucet
         return fail_with("faucet.address.invalid")
       end
       # 用户等级不足
-      user_id = current_user&.id
-      if false
+      if current_user&.trust_level < 1
         return fail_with("faucet.user.level_limit")
       end
       # 今日申领额度用尽
-      if false
+      if false 
         return fail_with("faucet.daily_limit")
       end
+      user_id = current_user&.id
+      date = Time.now.strftime('%Y-%m-%d')
+      #result = FaucetHistory.where(user_id: user_id).where("created_at > '#{date}' and status = 'success'" )
+      result = FaucetHistory.where(user_id: user_id)
       # 用户已领取
-      if false
+      if result.count > 0
         return fail_with("faucet.user.user_limit")
       end
       
       amount = SiteSetting.faucet_user_limit
       
       puts current_user
+
       FaucetHistory.add_history(user_id, address, amount, "claimed")
       render_json_dump("claim111111")
     end
