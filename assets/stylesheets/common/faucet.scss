@@ -1,0 +1,263 @@
+.faucet {
+	width: 800px;
+	margin: 0 auto;
+}
+.faucet .faucet_title {
+	height: 70px;
+	position: relative;
+	margin: 40px 0px;
+}
+.faucet .faucet_title img {
+	width: 70px;
+    height: 70px;
+    position: absolute;
+    left: 25px;
+}
+.faucet .faucet_title p{
+	
+	position: absolute;
+    left: 50%;
+    bottom: 0;
+    margin: 0;
+    font-family: 'Arial Bold', 'Arial';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 36px;
+    margin-left: -310px;
+	
+}
+.faucet .faucet_input input{
+   
+    width: 650px;
+    height: 48px;
+    padding: 5px 2px 5px 5px;
+    font-family: 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 13px;
+    text-decoration: none;
+    letter-spacing: normal;
+    color: #000000;
+    vertical-align: none;
+    text-align: left;
+    text-transform: none;
+    background-color: none;
+    border-color: #ddd;
+    border-radius: 3px;
+    outline: none;
+    border: 1px solid #ddd;
+}
+.faucet .faucet_input button{
+	width: 140px;
+    height: 48px;
+    margin-left: -5px;
+    background-color: rgba(12, 136, 201, 1);
+    border-width: 0px;
+    background: inherit;
+    background-color: rgba(12, 136, 201, 1);
+    border: none;
+    border-radius: 5px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-size: 16px;
+	color:#fff;
+	position:absolute;
+}
+.faucet .faucet_info{
+
+    width: 800px;
+    height: 65px;
+    background: inherit;
+    background-color: rgba(245, 245, 245, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(242, 242, 242, 1);
+    border-radius: 5px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    text-align: left;
+	margin-top: 40px;
+}
+
+.faucet .faucet_info ul{
+	
+	width: 800px;
+    height: 65px;
+    margin: 0;
+    padding: 0;
+}
+
+.faucet .faucet_info ul li{
+	width: 260px;
+	height: 65px;
+	text-align:center;
+	list-style: none;    
+	display: inline-block;
+	    text-align: left;
+}
+
+.faucet .faucet_info ul li img{
+	width:22px;
+	height:22px;
+	padding: 20px;
+    float: left;
+}
+.faucet .faucet_info ul li span{
+	font-size:13px;
+	margin-left: -10px;
+    height: 30px;
+    line-height: 40px;
+    display: inline-block;
+	min-width: 50%;
+}
+.faucet .faucet_info ul li .span_bottom{
+	font-size:18px;
+    line-height: 25px;
+    
+}
+.faucet .faucet_info ul li .span_bottom_status {
+	font-size:18px;
+    line-height: 20px;
+	border-width: 0px;
+    text-align: center;
+    width: 98px;
+    height: 23px;
+    background: inherit;
+    background-color: rgba(112, 182, 3, 1);
+    border: none;
+    border-radius: 4px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-size: 14px;
+    color: #FFFFFF;
+	min-width: 0px;
+    margin-top: 2px;
+  
+}
+.faucet .claim_status{
+	width:800px;
+	height:113px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: rgba(215, 215, 215, 1);
+    border-radius: 0px;
+}
+.faucet .claim_status div{
+	float:left;
+	width:200px;
+	height:113px;
+}
+.faucet .claim_status .claim_1 img{
+	width:45px;
+	height:45px;
+	float: left;
+    margin: 40px 0px 0px 20px;
+    border: 1px #ccc solid;
+    border-radius: 45px;
+}
+.faucet .claim_status .claim_1 .span_top{
+	height: 65px;
+    display: inline-block;
+    line-height: 120px;
+    font-family: 'Arial Bold', 'Arial';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 16px;
+    padding-left: 5px;
+}
+.faucet .claim_status .claim_1 .span_bottom{
+	height: 40px;
+    display: inline-block;
+	font-size: 16px;
+    color: #AAAAAA;
+    font-family: 'Arial';
+    font-weight: 400;
+    font-style: normal;
+   
+    padding-left: 5px;
+	    padding-top: 5px;
+}
+.faucet .claim_status .claim_2{
+	width:400px;
+	height:113px;
+	    
+}
+.faucet .claim_status .claim_2 span{
+	font-size: 14px;
+    padding: 15px;
+    color: #333333;
+    background: inherit;
+    background-color: rgba(242, 242, 242, 1);
+    border-radius: 4px;
+    border-width: 0px;
+    max-width: 350px;    
+    display: block;
+   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 40px;
+}
+.faucet .claim_status .claim_3{
+	    height: 63px;
+		    padding-top: 50px;
+	text-align: center;
+}
+    
+.faucet .claim_status .claim_3 span{
+	font-size: 14px;
+    color: #F59A23;
+    text-align: center;
+}
+ 
+.faucet .claim_status .claim_3 .claim_3_div{
+	float:none;
+	border-width: 0px;
+      margin: 0 auto;
+    width: 141px;
+    height: 6px;
+    background: inherit;
+    background-color: rgba(242, 242, 242, 1);
+    border: none;
+    border-radius: 9px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+} 
+.faucet .claim_status .claim_3 .claim_3_div div{
+	    border-width: 0px;
+    
+    width: 28px;
+    height: 6px;
+    background: inherit;
+    background-color: rgba(112, 182, 3, 1);
+    border: none;
+    border-radius: 9px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.faucet_doc{
+	width: 1000px;
+    margin: 0 auto;
+	font-family: 'Arial Bold', 'Arial';
+	margin-top:100px;
+
+}
+.faucet_doc p{
+	 font-size: 16px;
+    line-height: 30px;
+
+
+}
+
+
+
+   

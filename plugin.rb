@@ -4,7 +4,7 @@
 # authors: null
 # url: https://github.com/zhangml123/discourse_faucet_plugin
 
-puts "faucet plugin111111"
+register_asset 'stylesheets/common/faucet.scss'
 enabled_site_setting :faucet_enabled
 after_initialize do
 

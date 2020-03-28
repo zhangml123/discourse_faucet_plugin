@@ -4,17 +4,20 @@ import { ajax } from "discourse/lib/ajax";
 export default Ember.Controller.extend({
 	addressAvailable: false,
 	exceeded: false,
+	daily_limit : Discourse.SiteSettings.faucet_daily_limit,
+	user_limit : Discourse.SiteSettings.faucet_user_limit,
 	address : "",
+	serviceStatus: {"running":true},
+	faucetImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/faucet.svg"),
 	@discourseComputed(
-      "exceeded",
+      "isExceeded.failed",
       "addressValidation.failed"
     )
 	receiveDisabled() {
-		console.log("receiveDisabled " )
+		console.log("receiveDisabled")
 		if(this.get("addressValidation.failed")) return true;
-		if(this.exceeded) return true;
-		if (this.isExceeded) return true;
-		console.log("receiveDisabled= false ")
+		if(this.get("isExceeded.failed")) return true;
+		if(this.get("isBalance.failed")) return true;
 		return false;
 	},
 	@discourseComputed("address")
@@ -30,16 +33,41 @@ export default Ember.Controller.extend({
 
 		return EmberObject.create({
 	        failed: true,
-	        reason: I18n.t("address.invalid")
+	        reason: I18n.t("address.invalid")////地址错误
 	    });
 	},
 	isExceeded() {
-		console.log(this.siteSetting)
-
-		
-		return true
+		if(model.amount >= user_limit) {
+			console.log("amount ok")
+			return EmberObject.create({
+	          ok: true,
+	          reason: I18n.t("amount.ok")
+	        });	
+		}else{
+			
+			this.serviceStatus = {"suspend": true}
+		}
+		return EmberObject.create({
+	        failed: true,
+	        reason: I18n.t("amount.invalid")////今日领取余额不足
+	    });
 	},
-	
+	isBalance() {
+		if(model.balance >= user_limit) {
+			console.log("balance ok")
+			return EmberObject.create({
+	          ok: true,
+	          reason: I18n.t("balance.ok")
+	        });	
+		}else{
+			
+			this.serviceStatus= {"down" : true}
+		}
+		return EmberObject.create({
+	        failed: true,
+	        reason: I18n.t("balance.invalid")////水龙头余额不足
+	    });
+	},
 	actions: {
 
 		claim(){

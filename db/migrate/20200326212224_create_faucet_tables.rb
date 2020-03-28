@@ -7,6 +7,7 @@ class CreateFaucetTables <ActiveRecord::Migration[5.2]
       t.string :address, null: false
       t.integer :amount, null: false
       t.string :status
+      t.string :txid
       t.timestamps null: false
     end
    	add_index :faucet_histories, [:user_id, :created_at]
