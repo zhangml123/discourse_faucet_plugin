@@ -3,4 +3,5 @@ DiscourseFaucet::Engine.routes.draw do
   get "/" => "faucet#index", constraints: FaucetConstraint.new
   get "/get-balance" => "faucet#get_balance", constraints: FaucetConstraint.new
   post "/claim" => "faucet#claim", constraints: FaucetConstraint.new
+  get "/histories" => "faucet#histories", constraints: AdminConstraint.new
 end

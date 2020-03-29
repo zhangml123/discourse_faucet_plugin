@@ -1,5 +1,6 @@
 export default function(){
   this.route('faucet', function(){
-    this.route('faucet', {path: '/' });
+    this.route('show', {path: '/' });
+    this.route('histories', {path: '/histories' });
   });
 };

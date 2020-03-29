@@ -2,6 +2,10 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
+  activate() {
+    this.controllerFor("histories").fetchProblems();
+    scrollTop();
+  }
   model() {
     return ajax("/faucet/get-balance").then(result => {
       console.log("result = ")

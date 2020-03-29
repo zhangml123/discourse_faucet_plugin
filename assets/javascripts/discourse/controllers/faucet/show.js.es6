@@ -7,8 +7,15 @@ export default Ember.Controller.extend({
 	daily_limit : Discourse.SiteSettings.faucet_daily_limit,
 	user_limit : Discourse.SiteSettings.faucet_user_limit,
 	address : "",
+	claim_status:"",
 	serviceStatus: {"running":true},
 	faucetImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/faucet.svg"),
+	@discourseComputed("problems.length")
+  	foundProblems(problemsLength) {
+  		console.log("this.currentUser.get(admin)")
+  		console.log( this.currentUser.get("admin"))
+      return this.currentUser.get("admin") && (problemsLength || 0) > 0;
+    },
 	@discourseComputed(
       "isExceeded.failed",
       "addressValidation.failed"
@@ -22,15 +29,13 @@ export default Ember.Controller.extend({
 	},
 	@discourseComputed("address")
 	addressValidation() {
-		if(this.address != "" && (this.address.length == "5")){
-			console.log("this.address.length = 5 ")
+		const address = this.address;
+		if(address != "" && (address.length == "42") && (address.substring(0,2) == "0x")){
 			return EmberObject.create({
 	          ok: true,
 	          reason: I18n.t("address.ok")
 	        });	
 		}
-			console.log("this.address.length != 5 ")
-
 		return EmberObject.create({
 	        failed: true,
 	        reason: I18n.t("address.invalid")////地址错误
@@ -83,7 +88,7 @@ export default Ember.Controller.extend({
 				}).then(result => {
 			      console.log("result = ")
 			      console.log(result)
-			      
+			      this.claim_status = result.msg
 			     
 			    });
 			}

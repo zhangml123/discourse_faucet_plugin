@@ -14,7 +14,7 @@ class FaucetHistory < ActiveRecord::Base
       SQL
     history_id = DB.query_single(sql)
     
-    return history_id
+    return history_id[0]
   end
   def self.claimed(date)
   	puts "SELECT SUM(amount) AS amount FROM faucet_histories WHERE created_at > '#{date}' AND status <> 'failed'"
@@ -35,11 +35,16 @@ class FaucetHistory < ActiveRecord::Base
   	return result[0].amount
   end
   def self.update_status(history_id, status, txid)
+    puts "update_ststus history_id"
+    puts history_id
+    puts history_id.class
+
+   
   	now = Time.zone.now
   	sql = <<~SQL
        	UPDATE faucet_histories
        	   SET status = '#{status}' , updated_at = '#{now}', txid = '#{txid}'
-       	 WHERE id = '#{history_id}' 
+       	 WHERE id = #{history_id} 
       SQL
     result = DB.query(sql)
     puts "update result = "

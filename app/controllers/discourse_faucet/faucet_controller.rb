@@ -3,18 +3,20 @@ require "net/http"
 require "uri"
 module DiscourseFaucet
   class FaucetController < ApplicationController
-    #requires_login only: [:live_post_counts]
-   
-    #config.active_record.default_timezone = :local
 
-
-    skip_before_action :check_xhr, only: [:test, :claim]
-    requires_login only: [:claim]
-
+    #skip_before_action :check_xhr, only: [:histories]
+     
+    
+    requires_login only: [:claim, :histories]
+    before_action :ensure_staff , only: [:histories]
+    
     def index
-    	     	
       render_json_dump("PlatON NewBaleyworld testnet faucet")
     end
+    def histories
+      render_json_dump("PlatON NewBaleyworld testnet faucet histories")
+    end
+    
     def get_balance
       puts "ENV['PATH']"
       puts ENV['DOCKER_HOST_IP']
@@ -34,7 +36,9 @@ module DiscourseFaucet
       params.require(:address)
       address = params[:address]
       # 地址错误
-      if false
+      if address.length != 42 || address[0,2] != "0x"
+        puts address.length
+        puts address[0,2]
         return fail_with("faucet.address.invalid")
       end
       # 用户等级不足
@@ -67,42 +71,53 @@ module DiscourseFaucet
      
       if result_claimed.count == 0
         history_id = FaucetHistory.add_history(user_id, address, amount, "claimed")
+        puts "history_id ="
+        puts history_id
       else
         return fail_with("faucet.user.user_claimed")
       end
-      
-=begin
-      host = ENV['DOCKER_HOST_IP']
-      uri=URI.parse("http://" + host + ":8080/test/send?address=" + address)
-      http=Net::HTTP.new(uri.host,uri.port)
-      response=Net::HTTP.get_response(uri)
-      result = response.body
-      if body.success
-        txid = body.txid
-        result = FaucetHistory.update_status( history_id ,"pending",txid)
-      else
-        result = FaucetHistory.update_status( history_id ,"failed","")
-        render_json_dump({success: true, mag: I18n.t("claim_failed")})s
-      end
-=end
-      render_json_dump({success: true, mag: I18n.t("claim_success")}) 
-    end
-    def test
-
-      date = Time.zone.now.strftime('%Y-%m-%d')
-      result = FaucetHistory.where("created_at > " + date)
-
-      render plain:result.count
+      transfar(address, amount, history_id)
+      render_json_dump({success: true, message: I18n.t("claim_success")}) 
     end
     def fail_with(key)
       render json: { success: false, message: I18n.t(key) }
     end
     def date
-      t = Time.new
-      timestamp = Time.mktime(t.year,t.month,t.day,0,0,0).to_i - 8 * 60 * 60
-      return Time.at(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+       t = Time.new
+      if t.hour < 16
+        yesterday = t - 1.day 
+        date = yesterday.strftime('%Y-%m-%d 16:00:00')
+      else
+        date =  t.strftime('%Y-%m-%d 16:00:00')
+      end
+      return date 
     end
 
-    
+    def transfar(address, amount, history_id)
+      host = ENV['DOCKER_HOST_IP']
+      param = {} 
+      param["address"] = address
+      param["amount"] = amount
+      uri=URI.parse("http://" + host + ":8080/test/send")
+      http=Net::HTTP.new(uri.host,uri.port)
+      response=Net::HTTP.post_form(uri, param)
+
+      puts "transfar response"
+      puts response.body
+      res = JSON.parse(response.body)
+      
+      if res["status"] == "0x1"
+        txid = res["txid"]
+
+        puts "history_id1111 ="
+        puts history_id
+        result = FaucetHistory.update_status( history_id ,"pending",txid)
+      else
+        puts "history_id33333 ="
+        puts history_id
+        result = FaucetHistory.update_status( history_id ,"failed","")
+        return fail_with("faucet.user.claim_failed")
+      end
+    end
   end
 end
