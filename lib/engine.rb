@@ -5,7 +5,7 @@ module DiscourseFaucet
     config.after_initialize do
 
       Discourse::Application.routes.append do
-        mount ::DiscourseFaucet::Engine, at: "/faucet"
+        mount ::DiscourseFaucet::Engine, at: "/"
       end
     end
 

@@ -1,0 +1,9 @@
+en:
+  js:
+    directory:
+      user_id: "user id"
+      address: "address"
+      user_name: "user name"
+      amount: "amount"
+      created_at: "created_at"
+      status: "status"

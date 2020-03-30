@@ -7,16 +7,12 @@ module DiscourseFaucet
     #skip_before_action :check_xhr, only: [:histories]
      
     
-    requires_login only: [:claim, :histories]
-    before_action :ensure_staff , only: [:histories]
-    
+    requires_login only: [:claim, :history_items]
+    before_action :ensure_staff , only: [:history_items]
+
     def index
       render_json_dump("PlatON NewBaleyworld testnet faucet")
     end
-    def histories
-      render_json_dump("PlatON NewBaleyworld testnet faucet histories")
-    end
-    
     def get_balance
       puts "ENV['PATH']"
       puts ENV['DOCKER_HOST_IP']
@@ -25,7 +21,7 @@ module DiscourseFaucet
       amount = daily_limit - claimed
       amount = amount >= 0 ? amount : 0
       host = ENV['DOCKER_HOST_IP']
-    	uri=URI.parse("http://" + host + ":8080/test/getBalance?address=0xb5f81e8a65f9b537fee333cc79c3dc2196a35877")
+    	uri=URI.parse("http://" + host + ":8080/test/getBalance")
 		  http=Net::HTTP.new(uri.host,uri.port)
 		  response=Net::HTTP.get_response(uri)
       res = JSON.parse(response.body)
@@ -118,6 +114,21 @@ module DiscourseFaucet
         result = FaucetHistory.update_status( history_id ,"failed","")
         return fail_with("faucet.user.claim_failed")
       end
+    end
+    PAGE_SIZE = 10
+    def history_items
+      result = FaucetHistory.order("id desc")
+      page = params[:page].to_i
+      result_count = result.count
+      result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
+      more_params = params.slice(:order, :asc).permit!
+      more_params[:page] = page + 1
+      datas = serialize_data(result, FaucetHistorySerializer)
+      render_json_dump(faucet_history_items: datas,
+                total_rows_faucet_history_items: result_count,
+                load_more_faucet_history_items: faucet_history_items_path(more_params)
+      )
+
     end
   end
 end
