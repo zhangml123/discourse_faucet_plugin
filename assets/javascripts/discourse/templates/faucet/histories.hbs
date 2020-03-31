@@ -4,19 +4,12 @@
 		<p>PlatON NewBaleyworld 测试网水龙头</p>
 	</div>
 
-
-
-
-
-{{model}}
-{{model.length}}
-{{model.test}}
   {{#load-more selector=".directory tbody tr" action=(action "loadMore")}}
     <div class="container">
       <div class='directory'>
         {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
         <div class='clearfix'>
-          {{period-chooser period=period onChange=(action (mut period))}}
+          
           {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
         </div>
 
@@ -30,7 +23,7 @@
                 {{directory-toggle field="user_name" order=order asc=asc }}
                 {{directory-toggle field="address" order=order asc=asc}}
                 {{directory-toggle field="amount" order=order asc=asc}}
-                {{directory-toggle field="create_at" order=order asc=asc}}
+                {{directory-toggle field="created_at" order=order asc=asc}}
                 {{directory-toggle field="status" order=order asc=asc}}
                 
               </thead>
@@ -39,7 +32,7 @@
                   <tr>
                   	<td>{{ item.user_id}}</td>
                   	<td>{{ item.user_name}}</td>
-                  	<td style="display: block; overflow: hidden; text-overflow: ellipsis;  -o-text-overflow: ellipsis;;">{{ item.address}}</td>
+                  	<td>{{ item.address}}</td>
                   	<td>{{ item.amount}}</td>
                   	<td>{{ item.created_at}}</td>
                		<td>{{ item.status}}</td>
@@ -61,8 +54,4 @@
     </div>
   {{/load-more}}
 
-  
-	
-	
-	
 </div>

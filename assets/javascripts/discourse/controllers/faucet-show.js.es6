@@ -1,52 +1,59 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { isEmpty } from "@ember/utils";
 export default Ember.Controller.extend({
 	addressAvailable: false,
 	exceeded: false,
 	daily_limit : Discourse.SiteSettings.faucet_daily_limit,
 	user_limit : Discourse.SiteSettings.faucet_user_limit,
 	address : "",
-	claim_status:"",
 	serviceStatus: {"running":true},
+	submited:false,
 	faucetImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/faucet.svg"),
-	@discourseComputed("problems.length")
-  	foundProblems(problemsLength) {
-  		console.log("this.currentUser.get(admin)")
-  		console.log( this.currentUser.get("admin"))
-      return this.currentUser.get("admin") && (problemsLength || 0) > 0;
-    },
+	balanceImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/balance.svg"),
+	availableImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/available.svg"),
+	statusbleImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/status.svg"),
+	
 	@discourseComputed(
       "isExceeded.failed",
-      "addressValidation.failed"
+      "addressValidation.failed",
+      "submited"
     )
 	receiveDisabled() {
-		console.log("receiveDisabled")
+		console.log(this.currentUser)
+		if(!this.currentUser) return false;
 		if(this.get("addressValidation.failed")) return true;
 		if(this.get("isExceeded.failed")) return true;
 		if(this.get("isBalance.failed")) return true;
+		if(this.submited) return true;
 		return false;
 	},
 	@discourseComputed("address")
 	addressValidation() {
 		const address = this.address;
+		if (isEmpty(address)) {
+	        return EmberObject.create({
+	          failed: true
+	        });
+	      }
 		if(address != "" && (address.length == "42") && (address.substring(0,2) == "0x")){
 			return EmberObject.create({
 	          ok: true,
-	          reason: I18n.t("address.ok")
+	          reason: I18n.t("faucet.address.ok")
 	        });	
 		}
 		return EmberObject.create({
 	        failed: true,
-	        reason: I18n.t("address.invalid")////地址错误
+	        reason: I18n.t("faucet.address.invalid")////地址错误
 	    });
 	},
 	isExceeded() {
-		if(model.amount >= user_limit) {
+		if(this.get("model").amount >= user_limit) {
 			console.log("amount ok")
 			return EmberObject.create({
 	          ok: true,
-	          reason: I18n.t("amount.ok")
+	          reason: I18n.t("faucet.amount.ok")
 	        });	
 		}else{
 			
@@ -54,15 +61,15 @@ export default Ember.Controller.extend({
 		}
 		return EmberObject.create({
 	        failed: true,
-	        reason: I18n.t("amount.invalid")////今日领取余额不足
+	        reason: I18n.t("faucet.amount.invalid")////今日领取余额不足
 	    });
 	},
 	isBalance() {
-		if(model.balance >= user_limit) {
-			console.log("balance ok")
+		if(this.get("model").balance >= user_limit) {
+			console.log("faucet.balance ok")
 			return EmberObject.create({
 	          ok: true,
-	          reason: I18n.t("balance.ok")
+	          reason: I18n.t("faucet.balance.ok")
 	        });	
 		}else{
 			
@@ -70,12 +77,12 @@ export default Ember.Controller.extend({
 		}
 		return EmberObject.create({
 	        failed: true,
-	        reason: I18n.t("balance.invalid")////水龙头余额不足
+	        reason: I18n.t("faucet.balance.invalid")////水龙头余额不足
 	    });
 	},
 	actions: {
-
 		claim(){
+			this.submited = true;
 			console.log("click claim")
 			console.log(this.currentUser)
 			if(!this.currentUser){
@@ -86,15 +93,17 @@ export default Ember.Controller.extend({
 					type: "POST",
 					data: {address : this.address}
 				}).then(result => {
+				  this.submited = false;
 			      console.log("result = ")
 			      console.log(result)
-			      this.claim_status = result.msg
-			     
+				  $("#claim_tip").html(result.message)
+			      if(result.success){
+			      	setTimeout(fucntion(){
+			      		window.location.href="/faucet"
+			      	},2000)
+			      }
 			    });
 			}
-		    
 		}
 	}
-
-  
 })

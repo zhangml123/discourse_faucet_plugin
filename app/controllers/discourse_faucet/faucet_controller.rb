@@ -14,18 +14,25 @@ module DiscourseFaucet
       render_json_dump("PlatON NewBaleyworld testnet faucet")
     end
     def get_balance
-      puts "ENV['PATH']"
-      puts ENV['DOCKER_HOST_IP']
+      json = {}
       claimed = FaucetHistory.claimed(date) || 0
       daily_limit = SiteSetting.faucet_daily_limit
       amount = daily_limit - claimed
       amount = amount >= 0 ? amount : 0
+      json["amount"] = amount
+      if current_user
+         result = FaucetHistory.where(user_id: current_user&.id).where("created_at > '#{date}'")
+         json["claimed"] = result        
+      end
+
       host = ENV['DOCKER_HOST_IP']
     	uri=URI.parse("http://" + host + ":8080/test/getBalance")
 		  http=Net::HTTP.new(uri.host,uri.port)
 		  response=Net::HTTP.get_response(uri)
       res = JSON.parse(response.body)
-    	render json: {status: res["status"], balance: res["balance"], amount: amount}
+      json["status"] = res["status"]
+      json["balance"] = res["balance"]
+    	render json: json
     end
     def claim 
       
@@ -41,22 +48,17 @@ module DiscourseFaucet
       if current_user&.trust_level < 1
         return fail_with("faucet.user.level_limit")
       end
-      
-      puts date
-
+ 
       claimed = FaucetHistory.claimed(date) || 0
       daily_limit = SiteSetting.faucet_daily_limit
-      puts "claimed"
-      puts claimed
-      puts "daily_limit"
-      puts daily_limit
+  
        #今日申领额度用尽
       if claimed >= daily_limit
         return fail_with("faucet.daily_limit")
       end
       user_id = current_user&.id
       
-      result = FaucetHistory.where(user_id: user_id).where("created_at > '#{date}' and status <> 'success'" )
+      result = FaucetHistory.where(user_id: user_id).where("created_at > '#{date}' and status <> 'failed'" )
       # 用户已领取
       if result.count > 0
         return fail_with("faucet.user.user_limit")
@@ -73,7 +75,7 @@ module DiscourseFaucet
         return fail_with("faucet.user.user_claimed")
       end
       transfar(address, amount, history_id)
-      render_json_dump({success: true, message: I18n.t("claim_success")}) 
+      render_json_dump({success: true, message: I18n.t("faucet.claim_success")}) 
     end
     def fail_with(key)
       render json: { success: false, message: I18n.t(key) }
@@ -107,7 +109,8 @@ module DiscourseFaucet
 
         puts "history_id1111 ="
         puts history_id
-        result = FaucetHistory.update_status( history_id ,"pending",txid)
+        #result = FaucetHistory.update_status( history_id ,"pending",txid)
+        result = FaucetHistory.update_status( history_id ,"success",txid)
       else
         puts "history_id33333 ="
         puts history_id
@@ -115,12 +118,13 @@ module DiscourseFaucet
         return fail_with("faucet.user.claim_failed")
       end
     end
-    PAGE_SIZE = 10
+    PAGE_SIZE = 2
     def history_items
       result = FaucetHistory.order("id desc")
       page = params[:page].to_i
       result_count = result.count
       result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
+
       more_params = params.slice(:order, :asc).permit!
       more_params[:page] = page + 1
       datas = serialize_data(result, FaucetHistorySerializer)

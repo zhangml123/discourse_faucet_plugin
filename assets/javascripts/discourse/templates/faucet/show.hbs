@@ -1,32 +1,34 @@
 <div class="faucet">
 	<div class="faucet_title">
 		<div><img src={{faucetImageUrl}} ></div>
-		<p>PlatON NewBaleyworld 测试网水龙头</p>
+		<p>{{i18n "faucet.title"}}</p>
 	</div>
 	<div class="faucet_input">
 		
 		{{input placeholder="输入您的钱包地址"  value=address name="address" }}
                 
-		{{d-button  class="btn-large btn-primary" disabled=receiveDisabled label="claim_lat"  action=(action "claim")   }}
-		
+		{{d-button  class="btn-large btn-primary" disabled=receiveDisabled label="faucet.claim_lat"  action=(action "claim")   }}
+		{{input-tip validation=addressValidation id="address-validation"}}
 
 	</div>
-	<div style="text-align: center; padding: 10px;"><span style="color: rgba(12, 136, 201, 1); font-size: 14px;">{{claim_status}}</span></div>
+	<div style="text-align: center; padding: 10px;"><span style="color: rgba(12, 136, 201, 1); font-size: 14px;" id="claim_tip"></span>
+	</div>
+	
 	<div class="faucet_info">
 		<ul>
 			
 			<li>
-				<img src="" />
+				<img src={{balanceImageUrl}} />
 				<span class="span_top">水龙头地址余额</span>
 				<span class="span_bottom">{{model.balance}}  LAT</span>
 			</li>
 			<li>
-				<img src=""/>
+				<img src={{availableImageUrl}}/>
 				<span class="span_top">今日可领余额</span>
 				<span class="span_bottom">{{model.amount}}  LAT</span>
 			</li>
 			<li>
-				<img src=""/>
+				<img src={{statusbleImageUrl}}/>
 				<span class="span_top">服务运行状态:</span>
 				{{#if serviceStatus.running}}
 				<span class="span_bottom_status">运行中</span>
@@ -40,37 +42,34 @@
 			</li>
 		</ul>
 	</div>
+	{{#if model.claimed}}
 	<div class="claim_status">
 		<div class="claim_1">
-			<img src=""/>
-				<span class="span_top">论坛用户名</span>
-				<span class="span_bottom">昵称or徽章</span>
+			{{avatar currentUser imageSize="small"}}
+			<span class="span_top">论坛用户名</span>
+			{{#if currentUser.name}}
+				<span class="span_bottom">{{currentUser.name }}</span>
+			{{else}}
+				<span class="span_bottom">{{currentUser.username}}</span>
+			{{/if}}			
+				
 		</div>
 		<div class="claim_2">
-			<span>0x8262fc8458c7678fb8531dssssssssssssssssssssssssss260efab694289a9a32</span>
+			<span>{{model.claimed.address}}</span>
 		</div>
 		<div class="claim_3">
-			<span>处理中</span>
+			<span>{{i18n model.claimed.t_status}}</span>
 			<div class="claim_3_div">
-				<div></div>
+				<div style ={{model.claimed.style}}></div>
 			</div>
 		</div>
 	</div>
+	{{/if}}
 	
 	
 </div>
 <div class="faucet_doc">
-
-	<p style=" font-size: 24px; font-weight: 700;">水龙头运行说明：</p>
-
-	<p>水龙头支持每天领取测试网200LAT！</p>
-
-	<p>该PlatON水龙头在NewBaleyworld 网络上运行。为了防止恶意攻击者频繁恶意领取攻击，只有完成论坛注册和登录，并达到信任等级“初级用户”才能申领。</p>
-
-	<p>通过以下方式获得“初级用户”</p>
-
-	<p>输入至少5个主题</p>
-	<p>阅读至少30个帖子</p>
-	<p>总共花费10分钟阅读帖子</p>
-	<p>您可以在地址输入框下方跟踪当前的待处理请求，以查看轮到您需要等待的时间。</p>
+	
+	{{html-safe (i18n "faucet.introduction")}}
+	
 </div>

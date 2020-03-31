@@ -1,31 +1,31 @@
-en:
+zh_CN:
   js:
     directory:
-      user_id: "user id"
-      address: "address"
-      user_name: "user name"
-      amount: "amount"
-      created_at: "created_at"
-      status: "status"
+      user_id: "用户ID"
+      address: "钱包地址"
+      user_name: "用户名"
+      amount: "领取数量"
+      created_at: "领取时间"
+      status: "领取状态"
     faucet:
-      claim_lat: CLAIM LAT
+      claim_lat: 领取 LAT
       address:
-        ok: "address is availiable"
-        invalid: "address is invalid"
+        ok: "领取地址可用！"
+        invalid: "领取地址不可用！"
       amount: 
         ok: ""
-        invalid: "Today's claim limit is exhausted and come back tomorrow!"
+        invalid: "今日申领额度用尽，明日再来！"
       balance:
         ok: ""
-        invalid: "The faucet is abnormal and cannot be claimed temporarily!"
+        invalid: "水龙头异常，暂时无法申领！"
       user: 
-        user_limit: "Claimed today, come back tomorrow!"
-        level_limit: "Insufficient user level to claim LAT！" 
+        user_limit: "今日已申领，明日再来！"
+        level_limit: "用户等级不够，无法申领LAT！" 
       status:
-        claimed: "claimed"
-        pending: "pending"
-        success: "success"
-        failed: "failed"
+        claimed: "已申请"
+        pending: "处理中"
+        success: "成功"
+        failed: "失败"
       introduction: "<p style=\" font-size: 24px; font-weight: 700;\">水龙头运行说明：</p>
   <p>水龙头支持每天领取测试网200LAT！</p>
   <p>该PlatON水龙头在NewBaleyworld 网络上运行。为了防止恶意攻击者频繁恶意领取攻击，只有完成论坛注册和登录，并达到信任等级“初级用户”才能申领。</p>
@@ -34,5 +34,5 @@ en:
   <p>阅读至少30个帖子</p>
   <p>总共花费10分钟阅读帖子</p>
   <p>您可以在地址输入框下方跟踪当前的待处理请求，以查看轮到您需要等待的时间。</p>"
-      title: "PlatON NewBaleyworld Testnet Faucet"
-      claim_success: "claim success!"
+      title: "PlatON NewBaleyworld 测试网水龙头"
+      claim_success: "领取成功！"

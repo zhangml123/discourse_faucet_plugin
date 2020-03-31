@@ -8,9 +8,32 @@ export default DiscourseRoute.extend({
       console.log("result = ")
       console.log(result)
       if(result.status){
-          const balance  =  ( result.balance / 1000000000000000000 ).toFixed(2)
+          const balance  =   Math.floor(result.balance / 10000000000000000) / 100 
+          console.log(Math.floor(result.balance / 10000000000000000))
+          console.log(balance)
           const amount = (result.amount).toFixed(2)
-          return {"balance": balance, "amount": amount }
+          const claimed = result.claimed ? result.claimed[0] : null;
+          if(claimed){
+            switch(claimed.status){
+              case "claimed" : 
+                claimed.style = "background:#70b603;width:20%";
+                claimed.t_status = "faucet.status.claimed";
+                break;
+              case "pending" : 
+                claimed.style = "background:#ffe836fa;width:50%";
+                claimed.t_status = "faucet.status.pending";
+                break;
+              case "success" : 
+                claimed.style = "background:#70b603;width:100%";
+                claimed.t_status = "faucet.status.success";
+                break;
+              case "failed" : 
+                claimed.style = "background:#ff0000fa;width:100%";
+                claimed.t_status = "faucet.status.failed";
+                break;
+            }
+          }
+          return {"balance": balance, "amount": amount, "claimed":claimed }
       }else{
         return {"balance": false }
       }
@@ -18,7 +41,9 @@ export default DiscourseRoute.extend({
     });
   },
   setupController(controller, model) {
-    controller.set("model", model);
+   controller.setProperties({
+      model
+    });
     
   }
 
