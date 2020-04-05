@@ -48,21 +48,21 @@ export default Ember.Controller.extend({
 	    
 		if(address != "" && (address.length == "42") && (address.substring(0,2) == "0x")){
 			this.set("loading", true);
-	    	return ajax("/faucet/check_address?address=" + address)
+	    	ajax("/faucet/check_address?address=" + address)
 			  .then(result => {
 
 			  	this.set("loading", false);
 			  	console.log("check_address")
 			 if(result.claimed){
 			 	console.log(result.claimed)
-			 	return this.set( "addressLimitValidation",EmberObject.create({
+			 	this.set( "addressLimitValidation",EmberObject.create({
 			        failed: true,
 			        reason: I18n.t("faucet.address.limit")
 			    }) );
 			 	
 			 }else{
 			 	console.log(result.claimed)
-			 	return this.set( "addressLimitValidation",EmberObject.create({
+			 	this.set( "addressLimitValidation",EmberObject.create({
 			        ok: true,
 			        reason: I18n.t("faucet.address.ok")
 			    }));
@@ -140,11 +140,13 @@ export default Ember.Controller.extend({
 				  $("#claim_tip").html(result.message)
 				  	this.set("isClaimTip",true);
 				  	this.set("claim_tip",result.message)
-				  	if(result.success) this.set("claim_tip_style","color:#70b603;font-size:14px")
-					this.set("claimed", true);
-					this.set("address", this.address);
-					this.set("t_status", "faucet.status.success");
-					this.set("claimed_style", "background:#70b603;width:100%");
+				  	if(result.success) {
+				  		this.set("claim_tip_style","color:#70b603;font-size:14px")
+						this.set("claimed", true);
+						this.set("address", this.address);
+						this.set("t_status", "faucet.status.success");
+						this.set("claimed_style", "background:#70b603;width:100%");
+				  	}
 			    });
 			}
 		}

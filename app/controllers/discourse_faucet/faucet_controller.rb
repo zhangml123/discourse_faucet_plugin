@@ -4,7 +4,7 @@ require "uri"
 module DiscourseFaucet
   class FaucetController < ApplicationController
 
-    skip_before_action :check_xhr, only: [:export]
+    #skip_before_action :check_xhr, only: [:export]
      
     
     requires_login only: [:claim, :history_items]
@@ -139,7 +139,6 @@ module DiscourseFaucet
       page = params[:page].to_i
       result_count = result.count
       result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
-
       more_params = params.slice(:order, :asc).permit!
       more_params[:page] = page + 1
       datas = serialize_data(result, FaucetHistorySerializer)
@@ -177,14 +176,16 @@ module DiscourseFaucet
       sheet1.row(0)[6]="status"
       result = FaucetHistory.order("id desc")
       datas = serialize_data(result, FaucetHistorySerializer)
-      datas.times do |i|
-          sheet1.row(i+1)[0] = datas[i]["user_id"]
-          sheet1.row(i+1)[1] = ""
-          sheet1.row(i+1)[2] = datas[i]["address"]
-          sheet1.row(i+1)[3] = datas[i]["amount"]
-          sheet1.row(i+1)[4] = datas[i]["txit"]
-          sheet1.row(i+1)[5] = datas[i]["created_at"]
-          sheet1.row(i+1)[2] = datas[i]["status"]
+      puts datas
+      datas.each_index do |i|
+
+          sheet1.row(i+1)[0] = datas[i][:user_id]
+          sheet1.row(i+1)[1] = datas[i][:user_name]
+          sheet1.row(i+1)[2] = datas[i][:address]
+          sheet1.row(i+1)[3] = datas[i][:amount]
+          sheet1.row(i+1)[4] = datas[i][:txid]
+          sheet1.row(i+1)[5] = datas[i][:created_at]
+          sheet1.row(i+1)[2] = datas[i][:status]
       end
       #在指定路径下面创建test1.xls表格，并写book对象
       path = "#{Dir.pwd}/public/histories.xls"

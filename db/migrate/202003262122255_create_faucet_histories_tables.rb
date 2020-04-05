@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateFaucetTables <ActiveRecord::Migration[5.2]
+class CreateFaucetHistoriesTables <ActiveRecord::Migration[5.2]
   def change
     create_table :faucet_histories do |t|
       t.integer :user_id, null: false
