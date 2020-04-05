@@ -5,4 +5,6 @@ DiscourseFaucet::Engine.routes.draw do
   post "/faucet/claim" => "faucet#claim", constraints: FaucetConstraint.new
   get "/faucet/histories" => "faucet#index", constraints: AdminConstraint.new
   get "/faucet_history_items" => "faucet#history_items", constraints: AdminConstraint.new
+  get "/faucet/check_address" => "faucet#check_address", constraints: FaucetConstraint.new
+  get "/faucet/export" => "faucet#export" ,constraints: AdminConstraint.new
 end

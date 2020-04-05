@@ -4,22 +4,34 @@ import { h } from "virtual-dom";
 console.log("loading plugin")
 function initialize(api) {
 	api.reopenWidget("menu-links",{
-	  html(attrs) {
+
+
+	 /* faucetLinks(){
 	  	const links_faucet = [];
 	  	links_faucet.push({
-	        route: "/faucet",
+	        route: "faucet",
 	        className: "faucet-link",
-	        label: "faucet.index.title"
+	        label: "faucet.links.title"
 	      });
-	  	links_faucet.map(l => this.attach("link", l));
+	  	return links_faucet.map(l => this.attach("link", l));
 
-	  	console.log("links_faucet =")
-	  	console.log(links_faucet)
+	  },*/
+
+	  faucetLinks(){
+	  	const links_faucet = {
+	        route: "faucet",
+	        className: "faucet-link",
+	        label: "faucet.links.title"
+	      };
+	  	return this.attach("link", links_faucet);
+	  },
+	  html(attrs) {
+	  	
+	   // const links = attrs.name == "general-links" ? [attrs.contents()].concat((() => this.faucetLinks())()) : [].concat(attrs.contents());
 	    const links = [].concat(attrs.contents());
-	    links.concat(links_faucet)
-
-	    console.log("links = ")
-	    console.log(links)
+	    if (attrs.name == "general-links"){
+	    	links.push((() => this.faucetLinks())())
+	    }
 	    const liOpts = {};
 
 	    if (attrs.heading) {

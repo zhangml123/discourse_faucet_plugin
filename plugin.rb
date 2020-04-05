@@ -6,6 +6,9 @@
 
 register_asset 'stylesheets/common/faucet.scss'
 enabled_site_setting :faucet_enabled
+gem 'ruby-ole', '1.2.12.2',  require: false
+gem "spreadsheet", "1.2.6",require: false
+
 after_initialize do
 
   [ "../app/models/faucet_history",

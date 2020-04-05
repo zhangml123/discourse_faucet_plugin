@@ -3,17 +3,26 @@
 		<div><img src={{faucetImageUrl}} ></div>
 		<p>{{i18n "faucet.title"}}</p>
 	</div>
+	{{#if currentUser.admin }}
+		<div class="faucet_links"> 
+			<a href="/faucet/histories" style="margin-right: 10px;">领取历史</a>
+			<a href="/admin/site_settings/category/plugins?filter=faucet">设置</a>
+		</div>
+	{{/if}}
+	
 	<div class="faucet_input">
 		
 		{{input placeholder="输入您的钱包地址"  value=address name="address" }}
                 
 		{{d-button  class="btn-large btn-primary" disabled=receiveDisabled label="faucet.claim_lat"  action=(action "claim")   }}
 		{{input-tip validation=addressValidation id="address-validation"}}
-
 	</div>
-	<div style="text-align: center; padding: 10px;"><span style="color: rgba(12, 136, 201, 1); font-size: 14px;" id="claim_tip"></span>
+	{{#conditional-loading-spinner condition=loading}}
+	{{/conditional-loading-spinner}}
+	{{#if isClaimTip}}
+		<div style="text-align: center; padding: 10px;"><span style={{claim_tip_style}}>{{claim_tip}}</span>
 	</div>
-	
+	{{/if}}
 	<div class="faucet_info">
 		<ul>
 			
@@ -42,25 +51,20 @@
 			</li>
 		</ul>
 	</div>
-	{{#if model.claimed}}
+	{{#if claimed}}
 	<div class="claim_status">
 		<div class="claim_1">
 			{{avatar currentUser imageSize="small"}}
-			<span class="span_top">论坛用户名</span>
-			{{#if currentUser.name}}
-				<span class="span_bottom">{{currentUser.name }}</span>
-			{{else}}
-				<span class="span_bottom">{{currentUser.username}}</span>
-			{{/if}}			
-				
+			<span class="span_top">{{currentUser.username}}</span>
+			<span class="span_bottom">{{currentUser.name}}</span>
 		</div>
 		<div class="claim_2">
-			<span>{{model.claimed.address}}</span>
+			<span>{{t_address}}</span>
 		</div>
 		<div class="claim_3">
-			<span>{{i18n model.claimed.t_status}}</span>
+			<span>{{i18n t_status}}</span>
 			<div class="claim_3_div">
-				<div style ={{model.claimed.style}}></div>
+				<div style ={{claimed_style}}></div>
 			</div>
 		</div>
 	</div>

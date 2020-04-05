@@ -4,7 +4,7 @@ require "uri"
 module DiscourseFaucet
   class FaucetController < ApplicationController
 
-    #skip_before_action :check_xhr, only: [:histories]
+    skip_before_action :check_xhr, only: [:export]
      
     
     requires_login only: [:claim, :history_items]
@@ -34,6 +34,17 @@ module DiscourseFaucet
       json["balance"] = res["balance"]
     	render json: json
     end
+    def check_address
+      params.require(:address)
+      address = params[:address]
+      result = FaucetHistory.where(address: address).where("created_at > '#{date}' and status <> 'failed'" )
+      # 用户已领取
+      if result.count > 0
+        render json: { claimed: true }
+      else
+        render json: { claimed: false }
+      end
+    end
     def claim 
       
       params.require(:address)
@@ -44,8 +55,12 @@ module DiscourseFaucet
         puts address[0,2]
         return fail_with("faucet.address.invalid")
       end
+
+      level = SiteSetting.faucet_level_limit_set
+      puts "level = "
+      puts level
       # 用户等级不足
-      if current_user&.trust_level < 1
+      if current_user&.trust_level < level
         return fail_with("faucet.user.level_limit")
       end
  
@@ -128,11 +143,54 @@ module DiscourseFaucet
       more_params = params.slice(:order, :asc).permit!
       more_params[:page] = page + 1
       datas = serialize_data(result, FaucetHistorySerializer)
+      datas1 = []
+      datas.each do |data|
+         data[:created_at] =  Time.at(data[:created_at]).strftime("%Y-%m-%d %H:%M:%S")
+         #user = User.find_by(id: data[:user_id])
+         #data[:user_name] = user.username
+      end
+
       render_json_dump(faucet_history_items: datas,
                 total_rows_faucet_history_items: result_count,
                 load_more_faucet_history_items: faucet_history_items_path(more_params)
       )
 
+    end
+    def export
+
+      #encoding:utf-8
+      require "ole/storage"
+      require "spreadsheet/excel"
+      #设置表格的编码为utf-8
+      Spreadsheet.client_encoding="utf-8"
+      #创建表格对象
+      book=Spreadsheet::Workbook.new
+      #创建工作表
+      sheet1=book.create_worksheet :name => "sheet1"
+      #在表格第一行设置分类
+      sheet1.row(0)[0]="user id"
+      sheet1.row(0)[1]="user name"
+      sheet1.row(0)[2]="address"
+      sheet1.row(0)[3]="amount"
+      sheet1.row(0)[4]="txid"
+      sheet1.row(0)[5]="created_at"
+      sheet1.row(0)[6]="status"
+      result = FaucetHistory.order("id desc")
+      datas = serialize_data(result, FaucetHistorySerializer)
+      datas.times do |i|
+          sheet1.row(i+1)[0] = datas[i]["user_id"]
+          sheet1.row(i+1)[1] = ""
+          sheet1.row(i+1)[2] = datas[i]["address"]
+          sheet1.row(i+1)[3] = datas[i]["amount"]
+          sheet1.row(i+1)[4] = datas[i]["txit"]
+          sheet1.row(i+1)[5] = datas[i]["created_at"]
+          sheet1.row(i+1)[2] = datas[i]["status"]
+      end
+      #在指定路径下面创建test1.xls表格，并写book对象
+      path = "#{Dir.pwd}/public/histories.xls"
+      book.write path
+      #render_json_dump("PlatON NewBaleyworld testnet export")
+      send_file path
     end
   end
 end

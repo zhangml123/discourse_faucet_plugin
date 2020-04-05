@@ -6,10 +6,11 @@ class FaucetHistory < ActiveRecord::Base
   def self.add_history(user_id, address, amount, status)
   	
   	now = Time.zone.now
-
+    user = User.find_by(id: user_id)
+    user_name = user.username
   	sql = <<~SQL
-        INSERT INTO faucet_histories ( user_id, address, amount, status, created_at, updated_at) 
-             VALUES (#{user_id}, '#{address}', #{amount}, '#{status}','#{now}','#{now}') 
+        INSERT INTO faucet_histories ( user_id, user_name, address, amount, status, created_at, updated_at) 
+             VALUES (#{user_id}, '#{user_name}', '#{address}', #{amount}, '#{status}','#{now}','#{now}') 
           RETURNING id
       SQL
     history_id = DB.query_single(sql)
@@ -61,6 +62,7 @@ end
 #
 #  id              :integer          not null, primary key
 #  user_id         :integer
+#  user_name       :string
 #  address         :string           not null
 #  amount          :integer          not null
 #  status          :string           not null

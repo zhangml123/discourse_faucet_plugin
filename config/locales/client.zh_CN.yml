@@ -8,10 +8,13 @@ zh_CN:
       created_at: "领取时间"
       status: "领取状态"
     faucet:
+      links:
+        title: "水龙头"
       claim_lat: 领取 LAT
       address:
         ok: "领取地址可用！"
         invalid: "领取地址不可用！"
+        limit: "今日已申领，明日再来！"
       amount: 
         ok: ""
         invalid: "今日申领额度用尽，明日再来！"
@@ -30,9 +33,12 @@ zh_CN:
   <p>水龙头支持每天领取测试网200LAT！</p>
   <p>该PlatON水龙头在NewBaleyworld 网络上运行。为了防止恶意攻击者频繁恶意领取攻击，只有完成论坛注册和登录，并达到信任等级“初级用户”才能申领。</p>
   <p>通过以下方式获得“初级用户”</p>
-  <p>输入至少5个主题</p>
-  <p>阅读至少30个帖子</p>
-  <p>总共花费10分钟阅读帖子</p>
+  <ul>
+  <li><span>输入至少5个主题</span></li>
+  <li><span>阅读至少30个帖子</span></li>
+  <li><span>总共花费10分钟阅读帖子</span></li>
+  </ul>
   <p>您可以在地址输入框下方跟踪当前的待处理请求，以查看轮到您需要等待的时间。</p>"
       title: "PlatON NewBaleyworld 测试网水龙头"
       claim_success: "领取成功！"
+    

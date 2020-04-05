@@ -8,3 +8,6 @@ plugins:
   faucet_daily_limit:
     default: 20
     client: true
+  faucet_level_limit_set:
+    default: 1
+    enum: "TrustLevelSetting"

@@ -1,6 +1,7 @@
 class FaucetHistorySerializer < ApplicationSerializer
   attributes :id,
              :user_id,
+             :user_name,
              :address,
              :amount,
              :status,

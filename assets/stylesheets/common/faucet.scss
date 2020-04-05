@@ -170,6 +170,7 @@
     font-style: normal;
     font-size: 16px;
     padding-left: 5px;
+    min-width: 100px;
 }
 .faucet .claim_status .claim_1 .span_bottom{
 	height: 40px;
@@ -249,17 +250,34 @@
     margin: 0 auto;
 	font-family: 'Arial Bold', 'Arial';
 	margin-top:100px;
+    margin-bottom: 150px;
 
 }
 .faucet_doc p{
-	 font-size: 16px;
+	font-size: 16px;
     line-height: 30px;
-
+    margin:0px;
+    padding:0px;
+    
+}
+.faucet_doc ul{
+    margin: 0px;
+    font-size: 16px;
+    line-height: 30px;
+    display: block;
+    list-style-type: disc;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
 
 }
 #address-validation {
     width:100%
 }
-
+.faucet_links {
+    font-size: 14px;
+    text-align: right;
+    padding: 10px 12px;
+}
 
    

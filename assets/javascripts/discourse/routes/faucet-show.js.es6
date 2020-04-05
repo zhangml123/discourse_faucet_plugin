@@ -42,7 +42,11 @@ export default DiscourseRoute.extend({
   },
   setupController(controller, model) {
    controller.setProperties({
-      model
+      model,
+      claimed:( model.claimed ? true : false),
+      t_status: ( model.claimed ? model.claimed.t_status : null),
+      claimed_style: ( model.claimed ? model.claimed.style : null),
+      t_address: ( model.claimed ? model.claimed.address : null)
     });
     
   }

@@ -1,0 +1,13 @@
+zh_CN:
+  faucet:
+    user: 
+      user_limit: "今日已申领，明日再来！"
+      level_limit: "用户等级不够，无法申领LAT！"
+    claim_success: "领取成功！"
+    address:
+      limit: "今日已申领，明日再来！"
+  site_settings:
+    faucet_enabled: "启用水龙头"
+    faucet_user_limit: "每日单账户单次领取数量"
+    faucet_daily_limit: "每日水龙头申领数量限制"
+    faucet_level_limit_set: "可领取最低用户等级配置"
