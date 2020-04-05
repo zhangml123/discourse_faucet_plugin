@@ -4,11 +4,9 @@ require "uri"
 module DiscourseFaucet
   class FaucetController < ApplicationController
 
-    #skip_before_action :check_xhr, only: [:export]
-     
-    
-    requires_login only: [:claim, :history_items]
-    before_action :ensure_staff , only: [:history_items]
+    skip_before_action :check_xhr, only: [:export]
+    requires_login only: [:claim, :history_items, :export]
+    before_action :ensure_staff , only: [:history_items, :export]
 
     def index
       render_json_dump("PlatON NewBaleyworld testnet faucet")
@@ -33,6 +31,10 @@ module DiscourseFaucet
       json["status"] = res["status"]
       json["balance"] = res["balance"]
     	render json: json
+    rescue => e
+      json["status"] = false
+      json["balance"] = nil
+      render json: json
     end
     def check_address
       params.require(:address)
@@ -184,7 +186,7 @@ module DiscourseFaucet
           sheet1.row(i+1)[2] = datas[i][:address]
           sheet1.row(i+1)[3] = datas[i][:amount]
           sheet1.row(i+1)[4] = datas[i][:txid]
-          sheet1.row(i+1)[5] = datas[i][:created_at]
+          sheet1.row(i+1)[5] = Time.at(datas[i][:created_at]).strftime("%Y-%m-%d %H:%M:%S")
           sheet1.row(i+1)[2] = datas[i][:status]
       end
       #在指定路径下面创建test1.xls表格，并写book对象

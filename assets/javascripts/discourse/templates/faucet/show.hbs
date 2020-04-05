@@ -5,15 +5,15 @@
 	</div>
 	{{#if currentUser.admin }}
 		<div class="faucet_links"> 
-			<a href="/faucet/histories" style="margin-right: 10px;">领取历史</a>
-			<a href="/faucet/export" style="margin-right: 10px;">导出历史记录</a>
-			<a href="/admin/site_settings/category/plugins?filter=faucet">设置</a>
+			<a href="/faucet/histories" style="margin-right: 10px;">{{i18n "faucet.histories"}}</a>
+			<a href="/faucet/export" target="_blank" style="margin-right: 10px;">{{i18n "faucet.export_histories"}}</a>
+			<a href="/admin/site_settings/category/plugins?filter=faucet">{{i18n "faucet.settings"}}</a>
 		</div>
 	{{/if}}
 	
 	<div class="faucet_input">
 		
-		{{input placeholder="输入您的钱包地址"  value=address name="address" }}
+		{{input placeholder=(i18n "faucet.input_address")  value=address name="address" }}
                 
 		{{d-button  class="btn-large btn-primary" disabled=receiveDisabled label="faucet.claim_lat"  action=(action "claim")   }}
 		{{input-tip validation=addressValidation id="address-validation"}}
@@ -29,26 +29,19 @@
 			
 			<li>
 				<img src={{balanceImageUrl}} />
-				<span class="span_top">水龙头地址余额</span>
-				<span class="span_bottom">{{model.balance}}  LAT</span>
+				<span class="span_top">{{i18n "faucet.address_balance"}}</span>
+				<span class="span_bottom">{{model.balance}} LAT</span>
 			</li>
 			<li>
 				<img src={{availableImageUrl}}/>
-				<span class="span_top">今日可领余额</span>
-				<span class="span_bottom">{{model.amount}}  LAT</span>
+				<span class="span_top">{{i18n "faucet.balance_today"}}</span>
+				<span class="span_bottom">{{model.amount}} LAT</span>
 			</li>
 			<li>
 				<img src={{statusbleImageUrl}}/>
-				<span class="span_top">服务运行状态:</span>
-				{{#if serviceStatus.running}}
-				<span class="span_bottom_status">运行中</span>
-				{{/if}}
-				{{#if serviceStatus.suspend}}
-				<span class="span_bottom_status">暂停中</span>
-				{{/if}}
-				{{#if serviceStatus.down}}
-				<span class="span_bottom_status">异常中</span>
-				{{/if}}
+				<span class="span_top">{{i18n "faucet.server_status"}}:</span>
+				<span class="span_bottom_status" style={{model.serviceStatusStyle}}>{{i18n serviceStatus}}</span>
+				
 			</li>
 		</ul>
 	</div>

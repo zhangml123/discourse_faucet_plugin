@@ -1,14 +1,18 @@
 <div class="faucet">
 	<div class="faucet_title">
 		<div><img src={{faucetImageUrl}} ></div>
-		<p>PlatON NewBaleyworld 测试网水龙头</p>
+		<p>{{i18n "faucet.title"}}</p>
 	</div>
 
   {{#load-more selector=".directory tbody tr" action=(action "loadMore")}}
     <div class="container">
       <div class='directory'>
         {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
-       
+       <div class="faucet_links"> 
+        <a href="/faucet" style="margin-right: 10px;">{{i18n "faucet.links.title"}}</a>
+        <a href="/faucet/export" target="_blank" style="margin-right: 10px;">{{i18n "faucet.export_histories"}}</a>
+        <a href="/admin/site_settings/category/plugins?filter=faucet">{{i18n "faucet.settings"}}</a>
+      </div>
 
         {{#conditional-loading-spinner condition=model.loading}}
           {{#if model.length}}

@@ -41,4 +41,14 @@ zh_CN:
   <p>您可以在地址输入框下方跟踪当前的待处理请求，以查看轮到您需要等待的时间。</p>"
       title: "PlatON NewBaleyworld 测试网水龙头"
       claim_success: "领取成功！"
-    
+      histories: "领取历史"
+      export_histories: "导出历史记录"
+      settings: "设置"
+      input_address: "输入您的钱包地址"
+      address_balance: "水龙头地址余额"
+      balance_today: "今日可领余额"
+      server_status: "服务运行状态"
+      server:
+        running: "运行中"
+        suspend: "暂停中"
+        down: "异常中"
