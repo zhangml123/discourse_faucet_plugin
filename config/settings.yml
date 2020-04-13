@@ -2,6 +2,9 @@ plugins:
   faucet_enabled:
     default: true
     client: true
+  faucet_open:
+    default: true
+    client: true
   faucet_user_limit:
     default: 2
     client: true
@@ -10,4 +13,5 @@ plugins:
     client: true
   faucet_level_limit_set:
     default: 1
+    client: true
     enum: "TrustLevelSetting"

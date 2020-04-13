@@ -21,7 +21,7 @@ export default DiscourseRoute.extend({
                 claimed.t_status = "faucet.status.claimed";
                 break;
               case "pending" : 
-                claimed.style = "background:#ffe836fa;width:50%";
+                claimed.style = "background:#F59A23;width:50%";
                 claimed.t_status = "faucet.status.pending";
                 break;
               case "success" : 
@@ -29,23 +29,28 @@ export default DiscourseRoute.extend({
                 claimed.t_status = "faucet.status.success";
                 break;
               case "failed" : 
-                claimed.style = "background:#ff0000fa;width:100%";
+                claimed.style = "background:#999;width:100%";
                 claimed.t_status = "faucet.status.failed";
                 break;
             }
           }
           const user_limit = Discourse.SiteSettings.faucet_user_limit;
+          const faucet_open = Discourse.SiteSettings.faucet_open;
           var serviceStatus = "faucet.server.running";
           var serviceStatusStyle ="background-color:#70b603"
           if(amount < user_limit) {
             serviceStatus = "faucet.server.suspend";
-            serviceStatusStyle ="background-color:#ffe836fa"
+            serviceStatusStyle ="background-color:#F59A23"
           }
           if(balance < user_limit) {
             serviceStatus = "faucet.server.down";
-            serviceStatusStyle ="background-color:#ff0000fa"
+            serviceStatusStyle ="background-color:#ff0000"
           }
-
+          if(!faucet_open){
+            console.log("faucet closed")
+            serviceStatus = "faucet.server.suspend";
+            serviceStatusStyle ="background-color:#F59A23" 
+          }
           return {"balance": balance, "amount": amount, "claimed":claimed, "status":result.status ,"serviceStatus": serviceStatus, "serviceStatusStyle":serviceStatusStyle}
       }else{
         return {"balance": "...", "amount": "...", "status": false , "serviceStatus":"faucet.server.down", "serviceStatusStyle":"background-color:#ff0000fa"}
@@ -56,11 +61,14 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     controller.setProperties({
       model,
+      balance: model.balance,
+      amount: model.amount,
       claimed:( model.claimed ? true : false),
       t_status: ( model.claimed ? model.claimed.t_status : null),
       claimed_style: ( model.claimed ? model.claimed.style : null),
       t_address: ( model.claimed ? model.claimed.address : null),
       serviceStatus: model.serviceStatus,
+      faucetInfoBorderRadius: ( model.claimed ? "border-bottom-left-radius:unset;border-bottom-right-radius:unset;border-bottom:none":""),
     });
     
   }

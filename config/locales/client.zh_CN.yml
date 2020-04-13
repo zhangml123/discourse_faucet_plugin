@@ -17,7 +17,7 @@ zh_CN:
         limit: "今日已申领，明日再来！"
       amount: 
         ok: ""
-        invalid: "今日申领额度用尽，明日再来！"
+        invalid: "今日可领取额度不足，明日再来！"
       balance:
         ok: ""
         invalid: "水龙头异常，暂时无法申领！"
@@ -29,7 +29,7 @@ zh_CN:
         pending: "处理中"
         success: "成功"
         failed: "失败"
-      introduction: "<p style=\" font-size: 24px; font-weight: 700;\">水龙头运行说明：</p>
+      introduction: "<p style=\" font-size: 24px; font-weight: 700; margin-bottom:10px\">水龙头运行说明：</p>
   <p>水龙头支持每天领取测试网200LAT！</p>
   <p>该PlatON水龙头在NewBaleyworld 网络上运行。为了防止恶意攻击者频繁恶意领取攻击，只有完成论坛注册和登录，并达到信任等级“初级用户”才能申领。</p>
   <p>通过以下方式获得“初级用户”</p>

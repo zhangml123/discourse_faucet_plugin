@@ -11,7 +11,17 @@ module DiscourseFaucet
     def index
       render_json_dump("PlatON NewBaleyworld testnet faucet")
     end
+
     def get_balance
+    	render json: balance
+    rescue => e
+      json = balance
+      json["status"] = false
+      json["balance"] = nil
+      render json: json
+    end
+
+    def balance
       json = {}
       claimed = FaucetHistory.claimed(date) || 0
       daily_limit = SiteSetting.faucet_daily_limit
@@ -22,20 +32,16 @@ module DiscourseFaucet
          result = FaucetHistory.where(user_id: current_user&.id).where("created_at > '#{date}'")
          json["claimed"] = result        
       end
-
       host = ENV['DOCKER_HOST_IP']
-    	uri=URI.parse("http://" + host + ":8080/test/getBalance")
-		  http=Net::HTTP.new(uri.host,uri.port)
-		  response=Net::HTTP.get_response(uri)
+      uri=URI.parse("http://" + host + ":8080/test/getBalance")
+      http=Net::HTTP.new(uri.host,uri.port)
+      response=Net::HTTP.get_response(uri)
       res = JSON.parse(response.body)
       json["status"] = res["status"]
       json["balance"] = res["balance"]
-    	render json: json
-    rescue => e
-      json["status"] = false
-      json["balance"] = nil
-      render json: json
+      return json
     end
+
     def check_address
       params.require(:address)
       address = params[:address]
@@ -47,8 +53,11 @@ module DiscourseFaucet
         render json: { claimed: false }
       end
     end
-    def claim 
-      
+    def claim  
+      faucet_open = SiteSetting.faucet_open
+      if !faucet_open
+        return fail_with("faucet.closed")
+      end
       params.require(:address)
       address = params[:address]
       # 地址错误
@@ -65,14 +74,23 @@ module DiscourseFaucet
       if current_user&.trust_level < level
         return fail_with("faucet.user.level_limit")
       end
- 
+
+     
       claimed = FaucetHistory.claimed(date) || 0
       daily_limit = SiteSetting.faucet_daily_limit
   
-       #今日申领额度用尽
-      if claimed >= daily_limit
+      amount = SiteSetting.faucet_user_limit
+      #水龙头余额不足
+      puts (balance["balance"] / 1000000000000000000)
+      if balance["balance"] / 1000000000000000000 < amount
+         return fail_with("faucet.balance_limit")
+      end
+
+      #今日申领额度用尽
+      if (daily_limit - claimed) < amount
         return fail_with("faucet.daily_limit")
       end
+      
       user_id = current_user&.id
       
       result = FaucetHistory.where(user_id: user_id).where("created_at > '#{date}' and status <> 'failed'" )
@@ -81,7 +99,7 @@ module DiscourseFaucet
         return fail_with("faucet.user.user_limit")
       end
      
-      amount = SiteSetting.faucet_user_limit
+      
       result_claimed = FaucetHistory.where(user_id: user_id).where("created_at > '#{date}' and status = 'claimed'" )
      
       if result_claimed.count == 0
@@ -92,7 +110,7 @@ module DiscourseFaucet
         return fail_with("faucet.user.user_claimed")
       end
       transfar(address, amount, history_id)
-      render_json_dump({success: true, message: I18n.t("faucet.claim_success")}) 
+      render_json_dump({success: true,balance: balance, message: I18n.t("faucet.claim_success")}) 
     end
     def fail_with(key)
       render json: { success: false, message: I18n.t(key) }
@@ -187,10 +205,10 @@ module DiscourseFaucet
           sheet1.row(i+1)[3] = datas[i][:amount]
           sheet1.row(i+1)[4] = datas[i][:txid]
           sheet1.row(i+1)[5] = Time.at(datas[i][:created_at]).strftime("%Y-%m-%d %H:%M:%S")
-          sheet1.row(i+1)[2] = datas[i][:status]
+          sheet1.row(i+1)[6] = datas[i][:status]
       end
-      #在指定路径下面创建test1.xls表格，并写book对象
-      path = "#{Dir.pwd}/public/histories.xls"
+     
+      path = "#{Dir.pwd}/public/histories_"+(Time.new + 8.hour).strftime('%Y-%m-%d-%H-%M-%S')+".xls"
       book.write path
       #render_json_dump("PlatON NewBaleyworld testnet export")
       send_file path

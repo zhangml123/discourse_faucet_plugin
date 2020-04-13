@@ -16,32 +16,32 @@
 		{{input placeholder=(i18n "faucet.input_address")  value=address name="address" }}
                 
 		{{d-button  class="btn-large btn-primary" disabled=receiveDisabled label="faucet.claim_lat"  action=(action "claim")   }}
+
+
 		{{input-tip validation=addressValidation id="address-validation"}}
+
 	</div>
 	{{#conditional-loading-spinner condition=loading}}
 	{{/conditional-loading-spinner}}
-	{{#if isClaimTip}}
-		<div style="text-align: center; padding: 10px;"><span style={{claim_tip_style}}>{{claim_tip}}</span>
-	</div>
-	{{/if}}
-	<div class="faucet_info">
+	
+	
+	
+	<div class="faucet_info" style={{faucetInfoBorderRadius}}>
 		<ul>
-			
 			<li>
 				<img src={{balanceImageUrl}} />
 				<span class="span_top">{{i18n "faucet.address_balance"}}</span>
-				<span class="span_bottom">{{model.balance}} LAT</span>
+				<span class="span_bottom">{{balance}} LAT</span>
 			</li>
 			<li>
 				<img src={{availableImageUrl}}/>
 				<span class="span_top">{{i18n "faucet.balance_today"}}</span>
-				<span class="span_bottom">{{model.amount}} LAT</span>
+				<span class="span_bottom">{{amount}} LAT</span>
 			</li>
 			<li>
 				<img src={{statusbleImageUrl}}/>
 				<span class="span_top">{{i18n "faucet.server_status"}}:</span>
 				<span class="span_bottom_status" style={{model.serviceStatusStyle}}>{{i18n serviceStatus}}</span>
-				
 			</li>
 		</ul>
 	</div>

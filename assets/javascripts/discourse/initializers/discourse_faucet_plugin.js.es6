@@ -4,19 +4,6 @@ import { h } from "virtual-dom";
 console.log("loading plugin")
 function initialize(api) {
 	api.reopenWidget("menu-links",{
-
-
-	 /* faucetLinks(){
-	  	const links_faucet = [];
-	  	links_faucet.push({
-	        route: "faucet",
-	        className: "faucet-link",
-	        label: "faucet.links.title"
-	      });
-	  	return links_faucet.map(l => this.attach("link", l));
-
-	  },*/
-
 	  faucetLinks(){
 	  	const links_faucet = {
 	        route: "faucet",

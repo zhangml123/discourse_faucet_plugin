@@ -9,15 +9,15 @@ en:
       status: "status"
     faucet:
       links:
-        title: "faucet"
+        title: "Faucet"
       claim_lat: CLAIM LAT
       address:
-        ok: "address is availiable"
-        invalid: "address is invalid"
+        ok: "Address is availiable"
+        invalid: "Address is invalid"
         limit: "Claimed today, come back tomorrow!"
       amount: 
         ok: ""
-        invalid: "Today's claim limit is exhausted and come back tomorrow!"
+        invalid: "Today's available claim is insufficient and come back tomorrow!"
       balance:
         ok: ""
         invalid: "The faucet is abnormal and cannot be claimed temporarily!"
@@ -25,11 +25,11 @@ en:
         user_limit: "Claimed today, come back tomorrow!"
         level_limit: "Insufficient user level to claim LAT！" 
       status:
-        claimed: "claimed"
-        pending: "pending"
-        success: "success"
-        failed: "failed"
-      introduction: "<p style=\" font-size: 24px; font-weight: 700;\">How does this work?</p>
+        claimed: "Claimed"
+        pending: "Pending"
+        success: "Success"
+        failed: "Failed"
+      introduction: "<p style=\" font-size: 24px; font-weight: 700;margin-bottom:10px\">How does this work?</p>
   <p>Claim testnet 200 LAT from the faucet once every day！</p>
   <p>The PlatON faucet runs on the NewBaleyworld network. In order to prevent malicious attackers from frequently and maliciously claiming attacks, they can only claim after completing 
   forum registration and login and reaching  trust level “Novice user”.</p>
@@ -41,15 +41,15 @@ en:
   </ul>
   <p>You can track your current pending requests below the address entry box to see how long it takes you to wait.</p>"
       title: "PlatON NewBaleyworld Testnet Faucet"
-      claim_success: "claim success!"
-      histories: "claim histories"
-      export_histories: "export histories"
-      settings: "settings"
-      input_address: "input your address"
-      address_balance: "faucet baalance"
-      balance_today: "available balance today"
-      server_status: "server status"
+      claim_success: "Claim success!"
+      histories: "Claim histories"
+      export_histories: "Export Histories"
+      settings: "Settings"
+      input_address: "Input Your Address"
+      address_balance: "Faucet Balance"
+      balance_today: "Available balance today"
+      server_status: "Server Status"
       server:
-        running: "running"
-        suspend: "suspend"
-        down: "down"
+        running: "Running"
+        suspend: "Suspend"
+        down: "Abnormal"

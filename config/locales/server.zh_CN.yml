@@ -6,8 +6,11 @@ zh_CN:
     claim_success: "领取成功！"
     address:
       limit: "今日已申领，明日再来！"
+    daily_limit: "今日可领取额度不足，明日再来！"
+    balance_limit: "水龙头异常，暂时无法申领！"
   site_settings:
     faucet_enabled: "启用水龙头"
+    faucet_open: "开启水龙头"
     faucet_user_limit: "每日单账户单次领取数量"
     faucet_daily_limit: "每日水龙头申领数量限制"
     faucet_level_limit_set: "可领取最低用户等级配置"

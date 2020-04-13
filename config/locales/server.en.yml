@@ -3,11 +3,14 @@ en:
     user: 
       user_limit: "Claimed today, come back tomorrow!"
       level_limit: "Insufficient user level to claim LAT！"
-    claim_success: "claim success!"
+    claim_success: "Claim success!"
     address:
       limit: "Claimed today, come back tomorrow!"
+    daily_limit: "Today's available claim is insufficient and come back tomorrow!"
+    balance_limit: "The faucet is abnormal and cannot be claimed temporarily!"
   site_settings:
       faucet_enabled: "启用水龙头"
+      faucet_open: "开启水龙头"
       faucet_user_limit: "每日单账户单次领取数量"
       faucet_daily_limit: "每日水龙头申领数量限制"
       faucet_level_limit_set: "可领取最低用户等级配置"
