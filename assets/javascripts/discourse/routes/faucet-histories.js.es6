@@ -24,7 +24,9 @@ export default DiscourseRoute.extend({
   },
   model(params) {
     this._params = params;
-    return this.store.find("faucetHistoryItem",params);
+    return ajax("/faucet_history_items?page=1").then(result => {
+      return result;
+    })
   },
   setupController(controller, model) {
     console.log("model = ")
@@ -33,8 +35,9 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       model,
       period: params.period,
-      nameInput: params.name
-      
+      nameInput: params.name,
+      content: model.faucet_history_items,
+      totalPages: model.total_pages_faucet_history_items
     });
   },
   actions: {
@@ -43,6 +46,4 @@ export default DiscourseRoute.extend({
       return true;
     }
   }
-
-  
 });

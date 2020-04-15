@@ -159,8 +159,7 @@ module DiscourseFaucet
       page = params[:page].to_i
       result_count = result.count
       result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
-      more_params = params.slice(:order, :asc).permit!
-      more_params[:page] = page + 1
+      page_num = (result_count.to_f / PAGE_SIZE).ceil
       datas = serialize_data(result, FaucetHistorySerializer)
       datas1 = []
       datas.each do |data|
@@ -168,10 +167,9 @@ module DiscourseFaucet
          #user = User.find_by(id: data[:user_id])
          #data[:user_name] = user.username
       end
-
       render_json_dump(faucet_history_items: datas,
                 total_rows_faucet_history_items: result_count,
-                load_more_faucet_history_items: faucet_history_items_path(more_params)
+                total_pages_faucet_history_items: page_num
       )
 
     end

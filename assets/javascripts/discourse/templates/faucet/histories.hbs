@@ -4,7 +4,7 @@
 		<p>{{i18n "faucet.title"}}</p>
 	</div>
 
-  {{#load-more selector=".directory tbody tr" action=(action "loadMore")}}
+ 
     <div class="container">
       <div class='directory'>
         {{plugin-outlet name="users-top" connectorTagName='div' args=(hash model=model)}}
@@ -15,7 +15,7 @@
       </div>
 
         {{#conditional-loading-spinner condition=model.loading}}
-          {{#if model.length}}
+          {{#if content.length}}
 
             <table>
               <thead>
@@ -29,7 +29,7 @@
                 
               </thead>
               <tbody>
-               {{#each model as |item|}}
+               {{#each content as |item|}}
                   <tr>
                   	<td>{{ item.user_id}}</td>
                   	<td>{{ item.user_name}}</td>
@@ -45,14 +45,17 @@
             </table>
 
             {{conditional-loading-spinner condition=model.loadingMore}}
+
+            
           {{else}}
             <div class='clearfix'></div>
             <p>{{i18n "directory.no_results"}}</p>
           {{/if}}
+          {{pagination currentPage=currentPage totalPages=totalPages action=(action "changePage")}}
         {{/conditional-loading-spinner}}
 
       </div>
     </div>
-  {{/load-more}}
+
 
 </div>

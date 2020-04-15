@@ -14,6 +14,7 @@ export default Ember.Controller.extend({
   	asc: null,
   	name: "",
   	group: null,
+  	currentPage : 1,
   	exclude_usernames: null,
   	@observes("nameInput")
 	_setName: discourseDebounce(function() {
@@ -28,6 +29,19 @@ export default Ember.Controller.extend({
 	actions: {
 	    loadMore() {
 		    this.get("model").loadMore();
+		},
+		changePage(page){
+			
+			console.log("history_page = "+page)
+			ajax("/faucet_history_items?page=" + page).then(result => {
+		    
+		    	console.log("result = ")
+		    	console.log(result)
+		        this.set("content",result.faucet_history_items)
+		    	
+		    })
+		   
+			
 		}
 	}
   
