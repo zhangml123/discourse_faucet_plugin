@@ -29,8 +29,7 @@ export default DiscourseRoute.extend({
     })
   },
   setupController(controller, model) {
-    console.log("model = ")
-    console.log(model)
+   
     const params = this._params;
     controller.setProperties({
       model,

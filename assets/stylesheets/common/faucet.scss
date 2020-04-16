@@ -302,13 +302,15 @@
     height:40px;
     text-align: center;
 }
+.pagination-disabled {
+    cursor: initial !important;
+}
 .pagination ul li{
     cursor: pointer;
     list-style: none;
     display: inline-block;
     padding: 0px 5px;
+    color: rgb(0, 136, 204);
 }
-.pagination-disabled {
-    cursor: not-allowed;
-}
+
 

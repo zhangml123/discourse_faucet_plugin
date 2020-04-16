@@ -4,15 +4,9 @@ export default Component.extend({
 	html:null,
 	didInsertElement() {
 		this._super(...arguments);
-		console.log("this.page")
-		console.log(this.page)
-		if(this.page == null){
-			$(this.element).addClass("pagination-disabled")
-		}
-		if(this.type == "current"){
-			$(this.element).css("color","#ff0000")
-		}
-
+		this.initPage();
+	},
+	initPage(){
 		if(this.type == "prev"){
 			this.set("html","<<")
 		}else if(this.type == "next"){
@@ -20,9 +14,17 @@ export default Component.extend({
 		}else{
 			this.set("html",this.page)
 		}
+		if(this.type == "current"){
+			$(this.element).css("color","#000")
+		}
+		if(this.type == "current" || this.disabled){
+			$(this.element).addClass("pagination-disabled")
+		}
+
 	},
 	click(){
-		if(this.page != null){
+		this.initPage();
+		if(this.page != null && this.type != "current"){
 			let { action } = this;
 			action(this.page);
 		}

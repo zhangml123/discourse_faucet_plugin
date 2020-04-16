@@ -1,13 +1,21 @@
 <div class="pagination">
 	<ul>
 	
-		{{pagination-item type="prev" page=prev action=(action "changePage")}}
+		{{#if prev}}
+			{{pagination-item type="prev" page=prev action=(action "changePage")}}
+		{{else}}
+			{{pagination-item type="prev" page=prev disabled=true action=(action "changePage")}}
+		{{/if}}
 		{{#if showStart}}{{pagination-item type="first" page=1 action=(action "changePage")}}{{/if}}
 		{{#each pages as |item|}}
 		{{pagination-item  page=item.page type=item.type action=(action "changePage")}}
 		{{/each}}
 		{{#if showLast}}{{pagination-item type="last" page=totalPages action=(action "changePage")}}{{/if}}
-		{{pagination-item type="next" page=next action=(action "changePage")}}
+		{{#if next}}
+			{{pagination-item type="next" page=next action=(action "changePage")}}
+		{{else}}
+			{{pagination-item type="next" page=next disabled=true action=(action "changePage")}}
+		{{/if}}
 	
 		
 	</ul>

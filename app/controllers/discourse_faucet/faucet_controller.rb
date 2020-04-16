@@ -153,10 +153,10 @@ module DiscourseFaucet
         return fail_with("faucet.user.claim_failed")
       end
     end
-    PAGE_SIZE = 2
+    PAGE_SIZE = 10
     def history_items
       result = FaucetHistory.order("id desc")
-      page = params[:page].to_i
+      page = params[:page].to_i - 1
       result_count = result.count
       result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
       page_num = (result_count.to_f / PAGE_SIZE).ceil
