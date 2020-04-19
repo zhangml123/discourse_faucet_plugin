@@ -2,6 +2,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { isEmpty } from "@ember/utils";
+import { observes, on } from "discourse-common/utils/decorators";
 export default Ember.Controller.extend({
 	addressLimitValidation: null,
 	checkedAddress:false,
@@ -18,6 +19,7 @@ export default Ember.Controller.extend({
 	availableImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/available.svg"),
 	statusbleImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/status.svg"),
 	claim_tip:null,
+	interval:null,
 	@discourseComputed(
       "isExceeded.failed",
       "isBalance.failed",
@@ -111,8 +113,60 @@ export default Ember.Controller.extend({
 		if(this.claim_tip) return this.claim_tip;
  		return this.addressLimitValidation ? this.addressLimitValidation : this.addressBaseValidation;
 	},
+	@on("init")
+	autoRrefresh(){
+		console.log("init")
+		
+		clearInterval(this.interval)
+		let interval = setInterval(function(){
+
+			this.set("daily_limit", Discourse.SiteSettings.faucet_daily_limit)
+		  	this.set("user_limit", Discourse.SiteSettings.faucet_user_limit)
+		  	this.set("level_limit",  Discourse.SiteSettings.faucet_level_limit_set)
+		  	this.set("faucet_open", Discourse.SiteSettings.faucet_open)
+		},5000) 
+		this.set("interval",interval)
+		this.messageBus.unsubscribe("/faucet/claimed");
+		this.messageBus.subscribe(
+	      `/faucet/claimed`,
+     	data => {
+      	  console.log(data)
+      	  const balance =  Math.floor(data.balance / 10000000000000000) / 100
+      	  const amount = data.amount
+		  this.set("balance", balance)
+		  this.set("amount", amount)
+		  const user_limit = Discourse.SiteSettings.faucet_user_limit;
+          const faucet_open = Discourse.SiteSettings.faucet_open;
+          var serviceStatus = "faucet.server.running";
+          var serviceStatusStyle ="background-color:#70b603"
+          if(amount < user_limit) {
+            serviceStatus = "faucet.server.suspend";
+            serviceStatusStyle ="background-color:#F59A23"
+          }
+          if(balance < user_limit) {
+            serviceStatus = "faucet.server.down";
+            serviceStatusStyle ="background-color:#ff0000"
+          }
+          if(!faucet_open){
+            console.log("faucet closed")
+            serviceStatus = "faucet.server.suspend";
+            serviceStatusStyle ="background-color:#F59A23" 
+          }
+		  this.set("serviceStatus", serviceStatus)
+          this.set("serviceStatusStyle", serviceStatusStyle)
+        })
+
+
+	},
+	willDestroy() {
+    this._super(...arguments);
+
+      alert("willDestroy")
+      console.log("willDestroy")
+    },
 	actions: {
 		claim(){
+			
 			if(!this.faucet_open) return false;
 			this.set("submited", true);
 		  	if(!this.get("model").status) return false;

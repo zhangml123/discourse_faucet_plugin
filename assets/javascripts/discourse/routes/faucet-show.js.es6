@@ -68,6 +68,7 @@ export default DiscourseRoute.extend({
       claimed_style: ( model.claimed ? model.claimed.style : null),
       t_address: ( model.claimed ? model.claimed.address : null),
       serviceStatus: model.serviceStatus,
+      serviceStatusStyle: model.serviceStatusStyle,
       faucetInfoBorderRadius: ( model.claimed ? "border-bottom-left-radius:unset;border-bottom-right-radius:unset;border-bottom:none":""),
     });
     

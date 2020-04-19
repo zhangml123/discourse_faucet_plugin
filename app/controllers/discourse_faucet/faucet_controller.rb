@@ -39,6 +39,7 @@ module DiscourseFaucet
       res = JSON.parse(response.body)
       json["status"] = res["status"]
       json["balance"] = res["balance"]
+      MessageBus.publish("/faucet/claimed", json)
       return json
     end
 
