@@ -126,7 +126,7 @@ export default Ember.Controller.extend({
 	      `/faucet/claimed`,
      	data => {
       	  console.log(data)
-      	  const balance =  Math.floor(data.balance / 10000000000000000) / 100
+      	  const balance =  (Math.floor(data.balance / 10000000000000000) / 100).toFixed(2)
       	  const amount =(data.amount).toFixed(2) 
 		  this.refreshStatus(balance, amount);
         })
@@ -147,7 +147,7 @@ export default Ember.Controller.extend({
      			console.log("result ")
      			console.log(result)
 			      if(result.status){
-			          const balance  =  Math.floor(result.balance / 10000000000000000) / 100 
+			          const balance  =  (Math.floor(result.balance / 10000000000000000) / 100).toFixed(2) 
 			          const amount = (result.amount).toFixed(2) 
 			          console.log("amount = "+amount)
 					  this.refreshStatus(balance, amount);
@@ -155,10 +155,6 @@ export default Ember.Controller.extend({
 			  })
 
 	     	})
-
-        
-
-
 	},
 	refreshStatus(balance, amount){
 	  this.set("balance", balance)

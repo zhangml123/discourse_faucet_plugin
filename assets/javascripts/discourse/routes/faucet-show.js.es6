@@ -9,9 +9,7 @@ export default DiscourseRoute.extend({
       console.log(result)
       
       if(result.status){
-          const balance  =  Math.floor(result.balance / 10000000000000000) / 100  
-          console.log(Math.floor(result.balance / 10000000000000000))
-          console.log(balance)
+          const balance  =  (Math.floor(result.balance / 10000000000000000) / 100 ).toFixed(2) 
           const amount = (result.amount).toFixed(2) 
           const claimed = result.claimed ? result.claimed[0] : null;
           if(claimed){
