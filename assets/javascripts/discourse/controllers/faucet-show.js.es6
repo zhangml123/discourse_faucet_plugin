@@ -7,9 +7,9 @@ export default Ember.Controller.extend({
 	addressLimitValidation: null,
 	checkedAddress:false,
 	exceeded: false,
-	daily_limit : Discourse.SiteSettings.faucet_daily_limit,
-	user_limit : Discourse.SiteSettings.faucet_user_limit,
-	level_limit : Discourse.SiteSettings.faucet_level_limit_set,
+	daily_limit : Number(Discourse.SiteSettings.faucet_daily_limit),
+	user_limit : Number(Discourse.SiteSettings.faucet_user_limit),
+	level_limit : Number(Discourse.SiteSettings.faucet_level_limit_set),
 	faucet_open: Discourse.SiteSettings.faucet_open,
 	address : "",
 	submited:false,
@@ -44,7 +44,7 @@ export default Ember.Controller.extend({
 	addressBaseValidation() {
 		this.addressLimitValidation = null;
 		console.log("addressBaseValidation")
-
+		if(this.submited) return;
 		var address = this.address;
 		
 		if(this.currentUser && this.currentUser.trust_level < this.level_limit){
@@ -59,6 +59,11 @@ export default Ember.Controller.extend({
 		        reason: I18n.t("faucet.user.user_limit")////今日已领取
 		    });
 		}
+		console.log("this.balance = "+ this.balance)
+		console.log("this.user_limit = "+this.user_limit)
+		console.log(this.balance < this.user_limit)
+		console.log(typeof this.balance)
+		console.log(typeof this.user_limit)
 		if(this.balance < this.user_limit) {
 			return EmberObject.create({
 		        failed: true,
@@ -137,10 +142,10 @@ export default Ember.Controller.extend({
      		console.log("site_setting_saved")
      		console.log(data)
      		switch(data.setting_name){
-     			case "faucet_daily_limit" : this.set("daily_limit", data.setting_value);break;
-     			case "faucet_open" : this.set("faucet_open", data.setting_value);break;
-     			case "faucet_user_limit" : this.set("user_limit", data.setting_value);break;
-     			case "faucet_level_limit_set" : this.set("level_limit", data.setting_value);break;
+     			case "faucet_daily_limit" : this.set("daily_limit", Number(data.setting_value));break;
+     			case "faucet_open" : this.set("faucet_open", data.setting_value === "f" ? false : true);break;
+     			case "faucet_user_limit" : this.set("user_limit", Number(data.setting_value));break;
+     			case "faucet_level_limit_set" : this.set("level_limit", Number(data.setting_value));break;
      			default: return ;
      		}
      		ajax("/faucet/get-balance").then(result => {
@@ -213,7 +218,7 @@ export default Ember.Controller.extend({
 				}).then(result => {
 					console.log(result)
 				  	this.set("loading", false);
-				  	
+				  	this.set("submited", false);
 				  	if(result.success) {
 				  		this.set("claim_tip",EmberObject.create({
 					        ok: true,
