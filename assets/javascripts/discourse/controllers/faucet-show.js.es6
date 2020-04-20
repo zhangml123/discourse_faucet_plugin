@@ -19,7 +19,7 @@ export default Ember.Controller.extend({
 	availableImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/available.svg"),
 	statusbleImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/status.svg"),
 	claim_tip:null,
-	interval:null,
+	_once:(new Date()).valueOf(),
 	@discourseComputed(
       "isExceeded.failed",
       "isBalance.failed",
@@ -38,10 +38,13 @@ export default Ember.Controller.extend({
 		if(this.submited) return true;
 		return false;
 	},
-	@discourseComputed("address")
+	@discourseComputed(
+	  "address",
+      "_once")
 	addressBaseValidation() {
 		this.addressLimitValidation = null;
 		console.log("addressBaseValidation")
+
 		var address = this.address;
 		
 		if(this.currentUser && this.currentUser.trust_level < this.level_limit){
@@ -56,13 +59,15 @@ export default Ember.Controller.extend({
 		        reason: I18n.t("faucet.user.user_limit")////今日已领取
 		    });
 		}
-		if(this.get("model").balance < this.user_limit) {
+		if(this.balance < this.user_limit) {
 			return EmberObject.create({
 		        failed: true,
 		        reason: I18n.t("faucet.balance.invalid")////水龙头余额不足
 		    });
 		}
-	    if(this.get("model").amount < this.user_limit) {
+		console.log("this.user_limit = "+ this.user_limit)
+		console.log("this.amount = "+this.amount)
+	    if(this.amount < this.user_limit) {
 			return EmberObject.create({
 		        failed: true,
 		        reason: I18n.t("faucet.amount.invalid")////今日领取余额不足
@@ -116,54 +121,74 @@ export default Ember.Controller.extend({
 	@on("init")
 	autoRrefresh(){
 		console.log("init")
-		
-		clearInterval(this.interval)
-		let interval = setInterval(function(){
-
-			this.set("daily_limit", Discourse.SiteSettings.faucet_daily_limit)
-		  	this.set("user_limit", Discourse.SiteSettings.faucet_user_limit)
-		  	this.set("level_limit",  Discourse.SiteSettings.faucet_level_limit_set)
-		  	this.set("faucet_open", Discourse.SiteSettings.faucet_open)
-		},5000) 
-		this.set("interval",interval)
 		this.messageBus.unsubscribe("/faucet/claimed");
 		this.messageBus.subscribe(
 	      `/faucet/claimed`,
      	data => {
       	  console.log(data)
       	  const balance =  Math.floor(data.balance / 10000000000000000) / 100
-      	  const amount = data.amount
-		  this.set("balance", balance)
-		  this.set("amount", amount)
-		  const user_limit = Discourse.SiteSettings.faucet_user_limit;
-          const faucet_open = Discourse.SiteSettings.faucet_open;
-          var serviceStatus = "faucet.server.running";
-          var serviceStatusStyle ="background-color:#70b603"
-          if(amount < user_limit) {
-            serviceStatus = "faucet.server.suspend";
-            serviceStatusStyle ="background-color:#F59A23"
-          }
-          if(balance < user_limit) {
-            serviceStatus = "faucet.server.down";
-            serviceStatusStyle ="background-color:#ff0000"
-          }
-          if(!faucet_open){
-            console.log("faucet closed")
-            serviceStatus = "faucet.server.suspend";
-            serviceStatusStyle ="background-color:#F59A23" 
-          }
-		  this.set("serviceStatus", serviceStatus)
-          this.set("serviceStatusStyle", serviceStatusStyle)
+      	  const amount =(data.amount).toFixed(2) 
+		  this.refreshStatus(balance, amount);
         })
+		this.messageBus.unsubscribe("/faucet/site_setting_saved");
+		this.messageBus.subscribe(
+	      `/faucet/site_setting_saved`,
+     	data => {
+     		console.log("site_setting_saved")
+     		console.log(data)
+     		switch(data.setting_name){
+     			case "faucet_daily_limit" : this.set("daily_limit", data.setting_value);break;
+     			case "faucet_open" : this.set("faucet_open", data.setting_value);break;
+     			case "faucet_user_limit" : this.set("user_limit", data.setting_value);break;
+     			case "faucet_level_limit_set" : this.set("level_limit", data.setting_value);break;
+     			default: return ;
+     		}
+     		ajax("/faucet/get-balance").then(result => {
+     			console.log("result ")
+     			console.log(result)
+			      if(result.status){
+			          const balance  =  Math.floor(result.balance / 10000000000000000) / 100 
+			          const amount = (result.amount).toFixed(2) 
+			          console.log("amount = "+amount)
+					  this.refreshStatus(balance, amount);
+			      }
+			  })
+
+	     	})
+
+        
 
 
 	},
-	willDestroy() {
-    this._super(...arguments);
+	refreshStatus(balance, amount){
+	  this.set("balance", balance)
+	  this.set("amount", amount)
+	  const user_limit = this.user_limit;
+      const faucet_open = this.faucet_open;
+     
+      var serviceStatus = "faucet.server.running";
+      var serviceStatusStyle ="background-color:#70b603"
 
-      alert("willDestroy")
-      console.log("willDestroy")
-    },
+       console.log("this.user_limit11111 = "+ user_limit)
+		console.log("this.amount111111 = "+amount)
+      if(amount < user_limit) {
+        serviceStatus = "faucet.server.suspend";
+        serviceStatusStyle ="background-color:#F59A23"
+      }
+      if(balance < user_limit) {
+        serviceStatus = "faucet.server.down";
+        serviceStatusStyle ="background-color:#ff0000"
+      }
+      if(!faucet_open){
+        console.log("faucet closed")
+        serviceStatus = "faucet.server.suspend";
+        serviceStatusStyle ="background-color:#F59A23" 
+      }
+	  this.set("serviceStatus", serviceStatus)
+      this.set("serviceStatusStyle", serviceStatusStyle)
+      this.set("_once",(new Date()).valueOf())
+	},
+	
 	actions: {
 		claim(){
 			
