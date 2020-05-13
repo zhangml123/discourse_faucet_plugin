@@ -108,9 +108,9 @@ export default Ember.Controller.extend({
 			 	
 			 }
 		    });
-			return EmberObject.create({
+			/*return EmberObject.create({
 		        failed: true
-		    });
+		    });*/
 		}else{
 			return EmberObject.create({
 		        failed: true,
