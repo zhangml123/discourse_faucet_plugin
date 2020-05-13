@@ -201,7 +201,7 @@ export default Ember.Controller.extend({
 				this.set("loading", false);
 				this.send("showLogin");
 			}else{
-
+				if(this.get("addressValidation.failed")) return false;
 				this.set("claimed", true);
 				if(!this.claimed_and_success){
 					this.set("t_address", this.address);
