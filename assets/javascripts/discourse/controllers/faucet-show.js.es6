@@ -195,7 +195,7 @@ export default Ember.Controller.extend({
 		claim(){
 			
 			if(!this.faucet_open) return false;
-			this.set("submited", true);
+			
 		  	if(!this.get("model").status) return false;
 			if(!this.currentUser){
 				this.set("loading", false);
@@ -205,7 +205,8 @@ export default Ember.Controller.extend({
 				console.log("addressValidation=")
 				console.log(this.get("addressValidation"))
 				if(!this.get("addressValidation.failed")) {
-						this.set("claimed", true);
+					this.set("submited", true);
+					this.set("claimed", true);
 					if(!this.claimed_and_success){
 						this.set("t_address", this.address);
 						this.set("t_status", "faucet.status.pending");
