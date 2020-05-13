@@ -207,11 +207,12 @@ export default Ember.Controller.extend({
 					this.set("t_address", this.address);
 					this.set("t_status", "faucet.status.pending");
 					this.set("claimed_style", "background:#F59A23;width:0px");
+					let _this = this;
+					setTimeout(function(){
+						_this.set("claimed_style", "background:#F59A23;width:50%")
+					},1000)
 				}
-				let _this = this;
-				setTimeout(function(){
-					_this.set("claimed_style", "background:#F59A23;width:50%")
-				},1000)
+				
 				this.set("faucetInfoBorderRadius","border-bottom-left-radius:unset;border-bottom-right-radius:unset;border-bottom:none")
 				var address = this.address
 				if((address.length == "40") && (address.substring(0,2) != "0x")) address = "0x" + address
