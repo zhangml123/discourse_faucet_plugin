@@ -188,7 +188,7 @@ export default Ember.Controller.extend({
       }
 	  this.set("serviceStatus", serviceStatus)
       this.set("serviceStatusStyle", serviceStatusStyle)
-      //this.set("_once",(new Date()).valueOf())
+      //
 	},
 	
 	actions: {
@@ -201,50 +201,54 @@ export default Ember.Controller.extend({
 				this.set("loading", false);
 				this.send("showLogin");
 			}else{
-				if(this.get("addressValidation.failed")) return false;
-				this.set("claimed", true);
-				if(!this.claimed_and_success){
-					this.set("t_address", this.address);
-					this.set("t_status", "faucet.status.pending");
-					this.set("claimed_style", "background:#F59A23;width:0px");
-					let _this = this;
-					setTimeout(function(){
-						_this.set("claimed_style", "background:#F59A23;width:50%")
-					},1000)
+				this.set("_once",(new Date()).valueOf())
+				console.log("addressValidation.failed")
+				if(!this.get("addressValidation.failed")) {
+						this.set("claimed", true);
+					if(!this.claimed_and_success){
+						this.set("t_address", this.address);
+						this.set("t_status", "faucet.status.pending");
+						this.set("claimed_style", "background:#F59A23;width:0px");
+						let _this = this;
+						setTimeout(function(){
+							_this.set("claimed_style", "background:#F59A23;width:50%")
+						},1000)
+					}
+					
+					this.set("faucetInfoBorderRadius","border-bottom-left-radius:unset;border-bottom-right-radius:unset;border-bottom:none")
+					var address = this.address
+					if((address.length == "40") && (address.substring(0,2) != "0x")) address = "0x" + address
+					ajax("/faucet/claim",{
+						type: "POST",
+						data: {address : address}
+					}).then(result => {
+						console.log(result)
+					  	this.set("loading", false);
+					  	this.set("submited", false);
+					  	if(result.success) {
+					  		this.set("claim_tip",EmberObject.create({
+						        ok: true,
+						        reason: result.message
+						    }))
+					  		const balance  =  Math.floor(result.balance.balance / 10000000000000000) / 100 
+					  		this.set("balance",balance)
+					  		this.set("amount",result.balance.amount)
+							this.set("t_status", "faucet.status.success");
+							this.set("claimed_style", "background:#70b603;width:100%");
+							this.set("claimed_and_success",true)
+					  	}else{
+					  		if(!this.claimed_and_success){
+					  			this.set("t_status", "faucet.status.failed");
+								this.set("claimed_style", "background:#999;width:100%");
+					  		}
+							this.set("claim_tip",EmberObject.create({
+						        failed: true,
+						        reason: result.message
+						    }))
+					  	}
+				    });
 				}
 				
-				this.set("faucetInfoBorderRadius","border-bottom-left-radius:unset;border-bottom-right-radius:unset;border-bottom:none")
-				var address = this.address
-				if((address.length == "40") && (address.substring(0,2) != "0x")) address = "0x" + address
-				ajax("/faucet/claim",{
-					type: "POST",
-					data: {address : address}
-				}).then(result => {
-					console.log(result)
-				  	this.set("loading", false);
-				  	this.set("submited", false);
-				  	if(result.success) {
-				  		this.set("claim_tip",EmberObject.create({
-					        ok: true,
-					        reason: result.message
-					    }))
-				  		const balance  =  Math.floor(result.balance.balance / 10000000000000000) / 100 
-				  		this.set("balance",balance)
-				  		this.set("amount",result.balance.amount)
-						this.set("t_status", "faucet.status.success");
-						this.set("claimed_style", "background:#70b603;width:100%");
-						this.set("claimed_and_success",true)
-				  	}else{
-				  		if(!this.claimed_and_success){
-				  			this.set("t_status", "faucet.status.failed");
-							this.set("claimed_style", "background:#999;width:100%");
-				  		}
-						this.set("claim_tip",EmberObject.create({
-					        failed: true,
-					        reason: result.message
-					    }))
-				  	}
-			    });
 			}
 		}
 	}
