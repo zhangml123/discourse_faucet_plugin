@@ -71,8 +71,8 @@ export default Ember.Controller.extend({
 		        reason: I18n.t("faucet.balance.invalid")////水龙头余额不足
 		    });
 		}
-		//console.log("this.user_limit = "+ this.user_limit)
-		//console.log("this.amount = "+this.amount)
+		console.log("this.user_limit = "+ this.user_limit)
+		console.log("this.amount = "+this.amount)
 	    if(this.amount < this.user_limit) {
 			return EmberObject.create({
 		        failed: true,
@@ -202,7 +202,8 @@ export default Ember.Controller.extend({
 				this.send("showLogin");
 			}else{
 				this.set("_once",(new Date()).valueOf())
-				console.log("addressValidation.failed")
+				console.log("addressValidation=")
+				console.log(this.get("addressValidation"))
 				if(!this.get("addressValidation.failed")) {
 						this.set("claimed", true);
 					if(!this.claimed_and_success){
