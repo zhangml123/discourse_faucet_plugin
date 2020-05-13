@@ -164,7 +164,7 @@ module DiscourseFaucet
       datas = serialize_data(result, FaucetHistorySerializer)
       datas1 = []
       datas.each do |data|
-         data[:created_at] =  Time.at(data[:created_at]).strftime("%Y-%m-%d %H:%M:%S")
+         data[:created_at] =  (Time.at(data[:created_at]) + 8.hour).strftime("%Y-%m-%d %H:%M:%S")
          #user = User.find_by(id: data[:user_id])
          #data[:user_name] = user.username
       end
@@ -203,7 +203,7 @@ module DiscourseFaucet
           sheet1.row(i+1)[2] = datas[i][:address]
           sheet1.row(i+1)[3] = datas[i][:amount]
           sheet1.row(i+1)[4] = datas[i][:txid]
-          sheet1.row(i+1)[5] = Time.at(datas[i][:created_at]).strftime("%Y-%m-%d %H:%M:%S")
+          sheet1.row(i+1)[5] = (Time.at(datas[i][:created_at]) + 8.hour).strftime("%Y-%m-%d %H:%M:%S")
           sheet1.row(i+1)[6] = datas[i][:status]
       end
      

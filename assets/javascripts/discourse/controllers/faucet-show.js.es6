@@ -19,6 +19,7 @@ export default Ember.Controller.extend({
 	availableImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/available.svg"),
 	statusbleImageUrl: Discourse.getURL("/plugins/discourse_faucet_plugin/images/status.svg"),
 	claim_tip:null,
+	claimed_and_success:false,
 	_once:(new Date()).valueOf(),
 	@discourseComputed(
       "isExceeded.failed",
@@ -59,19 +60,19 @@ export default Ember.Controller.extend({
 		        reason: I18n.t("faucet.user.user_limit")////今日已领取
 		    });
 		}
-		console.log("this.balance = "+ this.balance)
-		console.log("this.user_limit = "+this.user_limit)
-		console.log(this.balance < this.user_limit)
-		console.log(typeof this.balance)
-		console.log(typeof this.user_limit)
+		//console.log("this.balance = "+ this.balance)
+		//console.log("this.user_limit = "+this.user_limit)
+		//console.log(this.balance < this.user_limit)
+		//console.log(typeof this.balance)
+		//console.log(typeof this.user_limit)
 		if(this.balance < this.user_limit) {
 			return EmberObject.create({
 		        failed: true,
 		        reason: I18n.t("faucet.balance.invalid")////水龙头余额不足
 		    });
 		}
-		console.log("this.user_limit = "+ this.user_limit)
-		console.log("this.amount = "+this.amount)
+		//console.log("this.user_limit = "+ this.user_limit)
+		//console.log("this.amount = "+this.amount)
 	    if(this.amount < this.user_limit) {
 			return EmberObject.create({
 		        failed: true,
@@ -90,16 +91,16 @@ export default Ember.Controller.extend({
 	    	ajax("/faucet/check_address?address=" + address)
 			  .then(result => {
 			  	this.set("loading", false);
-			  	console.log("check_address")
+			  	//console.log("check_address")
 			 if(result.claimed){
-			 	console.log(result.claimed)
+			 	//console.log(result.claimed)
 			 	this.set( "addressLimitValidation",EmberObject.create({
 			        failed: true,
 			        reason: I18n.t("faucet.address.limit")
 			    }) );
 			 	
 			 }else{
-			 	console.log(result.claimed)
+			 	//console.log(result.claimed)
 			 	this.set( "addressLimitValidation",EmberObject.create({
 			        ok: true,
 			        reason: I18n.t("faucet.address.ok")
@@ -125,12 +126,12 @@ export default Ember.Controller.extend({
 	},
 	@on("init")
 	autoRrefresh(){
-		console.log("init")
+		//console.log("init")
 		this.messageBus.unsubscribe("/faucet/claimed");
 		this.messageBus.subscribe(
 	      `/faucet/claimed`,
      	data => {
-      	  console.log(data)
+      	  //console.log(data)
       	  const balance =  (Math.floor(data.balance / 10000000000000000) / 100).toFixed(2)
       	  const amount =(data.amount).toFixed(2) 
 		  this.refreshStatus(balance, amount);
@@ -139,8 +140,8 @@ export default Ember.Controller.extend({
 		this.messageBus.subscribe(
 	      `/faucet/site_setting_saved`,
      	data => {
-     		console.log("site_setting_saved")
-     		console.log(data)
+     		//console.log("site_setting_saved")
+     		//console.log(data)
      		switch(data.setting_name){
      			case "faucet_daily_limit" : this.set("daily_limit", Number(data.setting_value));break;
      			case "faucet_open" : this.set("faucet_open", data.setting_value === "f" ? false : true);break;
@@ -149,8 +150,8 @@ export default Ember.Controller.extend({
      			default: return ;
      		}
      		ajax("/faucet/get-balance").then(result => {
-     			console.log("result ")
-     			console.log(result)
+     			//console.log("result ")
+     			//console.log(result)
 			      if(result.status){
 			          const balance  =  (Math.floor(result.balance / 10000000000000000) / 100).toFixed(2) 
 			          const amount = (result.amount).toFixed(2) 
@@ -170,8 +171,8 @@ export default Ember.Controller.extend({
       var serviceStatus = "faucet.server.running";
       var serviceStatusStyle ="background-color:#70b603"
 
-       console.log("this.user_limit11111 = "+ user_limit)
-		console.log("this.amount111111 = "+amount)
+       //console.log("this.user_limit11111 = "+ user_limit)
+		//console.log("this.amount111111 = "+amount)
       if(amount < user_limit) {
         serviceStatus = "faucet.server.suspend";
         serviceStatusStyle ="background-color:#F59A23"
@@ -187,7 +188,7 @@ export default Ember.Controller.extend({
       }
 	  this.set("serviceStatus", serviceStatus)
       this.set("serviceStatusStyle", serviceStatusStyle)
-      this.set("_once",(new Date()).valueOf())
+      //this.set("_once",(new Date()).valueOf())
 	},
 	
 	actions: {
@@ -202,9 +203,11 @@ export default Ember.Controller.extend({
 			}else{
 
 				this.set("claimed", true);
-				this.set("t_address", this.address);
-				this.set("t_status", "faucet.status.pending");
-				this.set("claimed_style", "background:#F59A23;width:0px");
+				if(!this.claimed_and_success){
+					this.set("t_address", this.address);
+					this.set("t_status", "faucet.status.pending");
+					this.set("claimed_style", "background:#F59A23;width:0px");
+				}
 				let _this = this;
 				setTimeout(function(){
 					_this.set("claimed_style", "background:#F59A23;width:50%")
@@ -229,9 +232,12 @@ export default Ember.Controller.extend({
 				  		this.set("amount",result.balance.amount)
 						this.set("t_status", "faucet.status.success");
 						this.set("claimed_style", "background:#70b603;width:100%");
+						this.set("claimed_and_success",true)
 				  	}else{
-				  		this.set("t_status", "faucet.status.failed");
-						this.set("claimed_style", "background:#999;width:100%");
+				  		if(!this.claimed_and_success){
+				  			this.set("t_status", "faucet.status.failed");
+							this.set("claimed_style", "background:#999;width:100%");
+				  		}
 						this.set("claim_tip",EmberObject.create({
 					        failed: true,
 					        reason: result.message
